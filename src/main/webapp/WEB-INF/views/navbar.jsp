@@ -8,6 +8,9 @@
 			<li id="navItemRegister" class="nav-item">
 				<a class="nav-link" href="/ipl/register">Register</a>
 			</li>
+			<li id="navItemPlayers" class="nav-item">
+				<a class="nav-link" href="/ipl/playersList">Players</a>
+			</li>
 			<li id="navItemUsers" class="nav-item">
 				<a class="nav-link" href="/ipl/users">Show Participants</a>
 			</li>

@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.masterminds.entity.PlayerInfo;
 import com.masterminds.entity.UserInfo;
 import com.masterminds.service.IplService;
 
@@ -47,7 +48,6 @@ public class IplController {
 	public String saveUserInfo(@RequestBody String userInfoStr) {
 		System.out.println("userInfoStr: " + userInfoStr);
 		String result = "";
-		ObjectMapper mapper = new ObjectMapper();
 		try {
 			UserInfo userInfo = mapper.readValue(userInfoStr, UserInfo.class);
 			if (userInfo != null) {
@@ -63,7 +63,7 @@ public class IplController {
 		return result;
 	}
 	
-	@GetMapping("user/{id}/view")
+	@GetMapping("user/view/{id}")
 	public ModelAndView getUserById(@PathVariable Long id) {
 		ModelAndView userView = new ModelAndView("profile");
 		UserInfo userInfo = iplService.getById(id);
@@ -71,7 +71,7 @@ public class IplController {
 		return userView;
 	}
 	
-	@GetMapping("user/{id}/edit")
+	@GetMapping("user/edit/{id}")
 	public ModelAndView editUserById(@PathVariable Long id) {
 		ModelAndView userView = new ModelAndView("user");
 		UserInfo userInfo = iplService.getById(id);
@@ -116,6 +116,29 @@ public class IplController {
 			return user.getId();
 		}
 		return 0L;
+	}
+
+	@GetMapping("playersList")
+	public ModelAndView getPlayers() {
+		return new ModelAndView("players");
+	}
+	
+	@GetMapping("player")
+	public ModelAndView addPlayer() {
+		return new ModelAndView("player");
+	}
+	
+	@GetMapping("player/edit/{id}")
+	public ModelAndView addPlayer(@PathVariable Long id) {
+		ModelAndView playerView = new ModelAndView("player");
+		PlayerInfo playerInfo = iplService.getPlayerById(id);
+		playerView.addObject("playerData", playerInfo);
+		return playerView;
+	}
+	
+	@PostMapping("savePlayer")
+	public void savePlayer(@RequestBody String playerInfo) {
+		
 	}
 	
 }

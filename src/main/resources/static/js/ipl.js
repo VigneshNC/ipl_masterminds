@@ -2,7 +2,7 @@ $(document).ready(function() {
 	$("body").css("background-color", "#3D4D61").css("font-family", "Ubuntu, 'times new roman', times, roman, serif");
 	$(".container").addClass("rounded").css("background-color", "#F3CA20").css("padding-bottom", "15px");
 
-	$("#btnSaveOrUpdate").on("click", function() {
+	$("#btnSaveOrUpdateUser").on("click", function() {
 		var registerData = $("#registerForm").serializeObject();
 		$.ajax({
 			type: "post",
@@ -37,11 +37,11 @@ $(document).ready(function() {
 	};
 	
 	$('.nav-item').removeClass('active');
-	$("#btnBack").hide();
+	$("#btnBackUser").hide();
 	
 	if (window.location.pathname.includes("ipl/register")) {
 		$("#h1user").html("Registeration Form");
-		$("#btnSaveOrUpdate").html("Save");
+		$("#btnSaveOrUpdateUser").html("Save");
 		$("#navItemRegister").addClass('active');
 		$("#navItemUsers").hide();
 	} else if (window.location.pathname.includes("ipl/users")) {
@@ -52,19 +52,23 @@ $(document).ready(function() {
 		$("#h1user").html("Registeration Form");
 		$("#navItemRules").addClass('active');
 		$("#navItemUsers").show();
-	} else if (window.location.pathname.includes("view")) {
+	} else if (window.location.pathname.includes("user/view")) {
 		$("#navItemUsers").show();
 		document.cookie = "isLogin=yes; path=/";
-	} else if (window.location.pathname.includes("edit")) {
+	} else if (window.location.pathname.includes("user/edit")) {
 		$("#h1user").html("Edit Participant");
-		$("#btnSaveOrUpdate").html("Update");
+		$("#btnSaveOrUpdateUser").html("Update");
 		$("#navItemUsers").show();
-		$("#btnBack").show();
+		$("#btnBackUser").show();
 	} else if (window.location.pathname.includes("ipl/login")) {
 		$("#h1user").html("Login Form");
 	} else if (window.location.pathname.includes("ipl/logout")) {
 		isLogin = "no";
 		document.cookie = "isLogin=; path=/";
+	} else if (window.location.pathname.includes("player")) {
+		$("#btnSaveOrUpdatePlayer").html("Save");
+	} else if (window.location.pathname.includes("player/edit")) {
+		$("#btnSaveOrUpdatePlayer").html("Update");
 	}
 	
 	if (document.cookie && document.cookie.includes("isLogin=yes")) {
@@ -134,11 +138,17 @@ $(document).ready(function() {
 		});
 	});
 	
-	$("#btnEdit").on("click", function() {
+	$("#btnEditUser").on("click", function() {
 		window.location="/ipl/user/" + $("#userId").val() + "/edit";
 	});
 	
-	$("#btnBack").on("click", function() {
+	$("#btnBackUser").on("click", function() {
 		window.location = window.location.pathname.replace("edit", "view");
 	});
+	
+	$("#btnAddPlayer").on("click", function() {
+		window.location = "/ipl/player";
+	});
+	
+	$("#tBodyPlayers").append("<tr><td>Washington</td></tr>");
 });

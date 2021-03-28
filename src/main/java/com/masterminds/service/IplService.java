@@ -2,6 +2,7 @@ package com.masterminds.service;
 
 import java.util.List;
 
+import com.masterminds.entity.PlayerInfo;
 import com.masterminds.entity.UserInfo;
 
 public interface IplService {
@@ -15,5 +16,7 @@ public interface IplService {
 	public void deleteById(Long id);
 	
 	public UserInfo getByUsernameAndPassword(String username, String password);
+
+	public PlayerInfo getPlayerById(Long id);
 	
 }

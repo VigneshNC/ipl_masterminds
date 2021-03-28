@@ -1,5 +1,7 @@
 package com.masterminds.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,7 +16,7 @@ public class UserInfo {
 
 	@Id
 	@SequenceGenerator(name = "userInfoSequence", sequenceName = "user_info_sequence", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userInfoSequence")
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")
 	private Long id;
 	
@@ -32,6 +34,12 @@ public class UserInfo {
 	
 	@Column(name = "team_name", unique = true)
 	private String teamName;
+	
+	@Column(name = "created_date")
+	private Date createdDate;
+	
+	@Column(name = "modified_date")
+	private Date modifiedDate;
 
 	public Long getId() {
 		return id;

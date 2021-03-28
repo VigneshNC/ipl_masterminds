@@ -4,7 +4,7 @@
 <html>
 <head>
 	<meta charset="ISO-8859-1">
-	<title>Login: IPL - Masterminds</title>
+	<title>Players: IPL - Masterminds</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -12,21 +12,26 @@
 </head>
 <body>
 	<jsp:include page="navbar.jsp" />
-	<jsp:include page="modal.jsp" />
 	
 	<div class="container pt-3">
-		<h1 id="h1user"></h1>
+		<h1>List of Players</h1>
 		<hr />
-		<div class="form-group">
-			<label class="font-weight-bold" for="txtLoginUsername">Username</label>
-			<input type="text" id="txtLoginUsername" name="username" class="form-control font-weight-bold" placeholder="Enter username" />
-		</div>
-		<div class="form-group">
-			<label class="font-weight-bold" for="loginPassword">Password</label>
-			<input type="password" id="loginPassword" name="password" class="form-control font-weight-bold" placeholder="Enter password" />
-		</div>
-		
-		<button id="btnLogin" class="btn btn-primary">Login</button>
+		<button class="float-right btn btn-primary" id="btnAddPlayer">Add Player</button>
+		<br /><br />
+		<table class="table table-dark table-hover">
+			<thead>
+				<tr>
+					<td>Player Name</td>
+					<td>a</td>
+					<td>b</td>
+					<td>c</td>
+					<td>d</td>
+					<td>e</td>
+					<td>f</td>
+				</tr>
+			</thead>
+			<tbody id="tBodyPlayers"></tbody>
+		</table>
 	</div>
 	<script type="text/javascript" src="/js/ipl.js"></script>
 </body>

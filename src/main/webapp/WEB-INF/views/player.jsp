@@ -4,7 +4,7 @@
 <html>
 <head>
 	<meta charset="ISO-8859-1">
-	<title>Registeration: IPL - Masterminds</title>
+	<title>Save Player: IPL - Masterminds</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -13,8 +13,8 @@
 <body>
 	<jsp:include page="navbar.jsp" />
 	
-	<div class="container pt-3">
-		<h1 id="h1user"></h1>
+	<div class="container">
+		<h1>Add Player</h1>
 		<hr />
 		<form id="registerForm">
 			<div class="form-group">
@@ -39,10 +39,10 @@
 				<input type="text" id="teamName" name="teamName" value="${userData.teamName}" class="form-control font-weight-bold" placeholder="Enter password" />
 			</div>
 			
-			<button id="btnSaveOrUpdateUser" class="btn btn-primary"></button>
+			<button id="btnSaveOrUpdatePlayer" class="btn btn-primary"></button>
 		</form>
 		<br>
-		<button id="btnBackUser" class="btn btn-primary">Back</button>
+		<button id="btnBackPlayer" class="btn btn-primary">Back</button>
 	</div>
 	<script type="text/javascript" src="/js/ipl.js"></script>
 </body>

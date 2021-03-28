@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.masterminds.dao.IplDAO;
+import com.masterminds.entity.PlayerInfo;
 import com.masterminds.entity.UserInfo;
 import com.masterminds.service.IplService;
 
@@ -38,6 +39,12 @@ public class IplServiceImpl implements IplService {
 	@Override
 	public UserInfo getByUsernameAndPassword(String username, String password) {
 		return iplDAO.getByUsernameAndPassword(username, password);
+	}
+
+	@Override
+	public PlayerInfo getPlayerById(Long id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
