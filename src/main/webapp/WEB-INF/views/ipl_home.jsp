@@ -14,7 +14,8 @@
 	<jsp:include page="navbar.jsp" />
 	
 	<div class="container pt-3">
-		<h1>Welcome to IPL - Masterminds!</h1>
+	    <h1>Welcome to IPL - Masterminds!</h1>
+            <h2>Stay tune, our application is being developed...!<h2>
 	</div>
 	<script type="text/javascript" src="/js/ipl.js"></script>
 </body>
