@@ -46,5 +46,15 @@ public class IplServiceImpl implements IplService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public void saveOrUpdate(PlayerInfo playerInfo) {
+		iplDAO.saveOrUpdate(playerInfo);
+	}
+
+	@Override
+	public List<PlayerInfo> getAllPlayers() {
+		return iplDAO.getAllPlayers();
+	}
 	
 }

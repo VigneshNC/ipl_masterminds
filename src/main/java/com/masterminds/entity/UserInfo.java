@@ -16,7 +16,7 @@ public class UserInfo {
 
 	@Id
 	@SequenceGenerator(name = "userInfoSequence", sequenceName = "user_info_sequence", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "userInfoSequence")
 	@Column(name = "id")
 	private Long id;
 	
@@ -89,4 +89,19 @@ public class UserInfo {
 		this.teamName = teamName;
 	}
 	
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public Date getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
 }

@@ -1,9 +1,9 @@
 package com.masterminds.dao.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.masterminds.dao.IplDAO;
+import com.masterminds.entity.PlayerInfo;
 import com.masterminds.entity.UserInfo;
 
 @Repository
@@ -29,8 +29,11 @@ public class IplDAOImpl implements IplDAO {
 	public void saveOrUpdate(UserInfo userInfo) {
 		Session session = sessionFactory.getCurrentSession();
 		if (userInfo.getId() != null) {
+			userInfo.setModifiedDate(new Date());
 			session.update(userInfo);
 		} else {
+			userInfo.setCreatedDate(new Date());
+			userInfo.setModifiedDate(new Date());
 			session.save(userInfo);
 		}
 		session.flush();
@@ -67,6 +70,28 @@ public class IplDAOImpl implements IplDAO {
 		criteria.add(Restrictions.eq("username", username));
 		criteria.add(Restrictions.eq("password", password));
 		return (UserInfo) criteria.uniqueResult();
+	}
+
+	@Override
+	public void saveOrUpdate(PlayerInfo playerInfo) {
+		Session session = sessionFactory.getCurrentSession();
+		if (playerInfo.getId() != null) {
+			playerInfo.setModifiedDate(new Date());
+			session.update(playerInfo);
+		} else {
+			playerInfo.setCreatedDate(new Date());
+			playerInfo.setModifiedDate(new Date());
+			session.save(playerInfo);
+		}
+		session.flush();
+	}
+
+	@Override
+	public List<PlayerInfo> getAllPlayers() {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(PlayerInfo.class);
+		List<PlayerInfo> playerList = criteria.list();
+		return playerList;
 	}
 
 }

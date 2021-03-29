@@ -16,29 +16,40 @@
 	<div class="container">
 		<h1>Add Player</h1>
 		<hr />
-		<form id="registerForm">
+		<form id="playerForm">
 			<div class="form-group">
-				<input type="hidden" id="hTxtId" name="id" value="${userData.id}" class="form-control font-weight-bold" />
-				<label class="font-weight-bold" for="txtFirstName">First Name</label>
-				<input type="text" id="txtFirstName" name="firstName" value="${userData.firstName}" class="form-control font-weight-bold" placeholder="Enter your first name" />
+				<input type="hidden" id="hTxtId" name="id" value="${playerData.id}" class="form-control font-weight-bold" />
+				<label class="font-weight-bold" for="txtPlayerName">Player Name</label>
+				<input type="text" id="txtPlayerName" name="playerName" value="${playerData.playerName}" class="form-control font-weight-bold" placeholder="Enter player name" />
 			</div>
 			<div class="form-group">
-				<label class="font-weight-bold" for="txtFirstName">Last Name</label>
-				<input type="text" id="txtLastName" name="lastName" value="${userData.lastName}" class="form-control font-weight-bold" placeholder="Enter your last name" />
+				<label class="font-weight-bold" for="txtRole">Role</label>
+				<input type="text" id="txtRole" name="role" value="${playerData.role}" class="form-control font-weight-bold" placeholder="Enter role" />
 			</div>
 			<div class="form-group">
-				<label class="font-weight-bold" for="txtFirstName">Username</label>
-				<input type="text" id="txtUsername" name="username" value="${userData.username}" class="form-control font-weight-bold" placeholder="Enter username" />
+				<label class="font-weight-bold" for="txtNationality">Nationality</label>
+				<input type="text" id="txtNationality" name="nationality" value="${playerData.nationality}" class="form-control font-weight-bold" placeholder="Enter nationality" />
 			</div>
 			<div class="form-group">
-				<label class="font-weight-bold" for="txtFirstName">Password</label>
-				<input type="password" id="password" name="password" value="${userData.password}" class="form-control font-weight-bold" placeholder="Enter password" />
+				<label class="font-weight-bold" for="txtIplTeam">IPL Team</label>
+				<input type="text" id="txtIplTeam" name="iplTeam" value="${playerData.iplTeam}" class="form-control font-weight-bold" placeholder="Enter IPL Team name" />
 			</div>
 			<div class="form-group">
-				<label class="font-weight-bold" for="txtTeamName">Team Name</label>
-				<input type="text" id="teamName" name="teamName" value="${userData.teamName}" class="form-control font-weight-bold" placeholder="Enter password" />
+				<label class="font-weight-bold" for="txtOwnedBy">Owner Name</label>
+				<input type="text" id="txtOwnedBy" name="ownedBy" value="${playerData.ownedBy}" class="form-control font-weight-bold" placeholder="Enter owner name" />
 			</div>
-			
+			<div class="form-group">
+				<label class="font-weight-bold" for="bid">Bid</label>
+				<!-- <div class="form-check-inline">
+					<input type="radio" id="bidYes" name="bid" value="yes" class="form-check-input">Yes 
+					<input type="radio" id="bidNo" name="bid" value="no" class="form-check-input">No
+				</div> -->
+				<input type="text" id="bid" name="bid" value="${playerData.bid}" class="form-control font-weight-bold" placeholder="Enter bid as yes or no" />
+			</div>
+			<div class="form-group">
+				<label class="font-weight-bold" for="points">Points</label>
+				<input type="number" id="points" name="points" value="${playerData.points}" class="form-control font-weight-bold" placeholder="Enter points" />
+			</div>
 			<button id="btnSaveOrUpdatePlayer" class="btn btn-primary"></button>
 		</form>
 		<br>

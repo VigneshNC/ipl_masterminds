@@ -119,8 +119,12 @@ public class IplController {
 	}
 
 	@GetMapping("playersList")
-	public ModelAndView getPlayers() {
-		return new ModelAndView("players");
+	public ModelAndView getPlayers() throws JsonProcessingException {
+		ModelAndView playersView = new ModelAndView("players");
+		List<PlayerInfo> playersInfo = iplService.getAllPlayers();
+		System.out.println("Players: " + mapper.writeValueAsString(playersInfo));
+		playersView.addObject("playersData", playersInfo);
+		return playersView;
 	}
 	
 	@GetMapping("player")
@@ -137,8 +141,22 @@ public class IplController {
 	}
 	
 	@PostMapping("savePlayer")
-	public void savePlayer(@RequestBody String playerInfo) {
-		
+	public String savePlayer(@RequestBody String playerInfoStr) {
+		System.out.println("userInfoStr: " + playerInfoStr);
+		String result = "";
+		try {
+			PlayerInfo playerInfo = mapper.readValue(playerInfoStr, PlayerInfo.class);
+			if (playerInfo != null) {
+				System.out.println("playerInfo: " + mapper.writeValueAsString(playerInfo));
+				iplService.saveOrUpdate(playerInfo);
+				result = mapper.writeValueAsString(playerInfo);
+			}
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 }

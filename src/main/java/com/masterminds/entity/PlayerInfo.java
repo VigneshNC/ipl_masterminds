@@ -36,10 +36,10 @@ public class PlayerInfo {
 	private String ownedBy;
 	
 	@Column(name = "bid")
-	private boolean bid;
+	private String bid;
 	
 	@Column(name = "points")
-	private Long points;
+	private String points;
 	
 	@Column(name = "created_date")
 	private Date createdDate;
@@ -95,19 +95,19 @@ public class PlayerInfo {
 		this.ownedBy = ownedBy;
 	}
 
-	public boolean isBid() {
+	public String getBid() {
 		return bid;
 	}
 
-	public void setBid(boolean bid) {
+	public void setBid(String bid) {
 		this.bid = bid;
 	}
 
-	public Long getPoints() {
+	public String getPoints() {
 		return points;
 	}
 
-	public void setPoints(Long points) {
+	public void setPoints(String points) {
 		this.points = points;
 	}
 

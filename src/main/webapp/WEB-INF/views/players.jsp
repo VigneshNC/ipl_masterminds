@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,15 +23,27 @@
 			<thead>
 				<tr>
 					<td>Player Name</td>
-					<td>a</td>
-					<td>b</td>
-					<td>c</td>
-					<td>d</td>
-					<td>e</td>
-					<td>f</td>
+					<td>Role</td>
+					<td>Nationality</td>
+					<td>IPL Team</td>
+					<td>Owner</td>
+					<td>Bid</td>
+					<td>Points</td>
 				</tr>
 			</thead>
-			<tbody id="tBodyPlayers"></tbody>
+			<tbody id="tBodyPlayers">
+				<c:forEach items="${playersData}" var="playerData">
+					<tr>
+						<td>${playerData.playerName}</td>
+						<td>${playerData.role}</td>
+						<td>${playerData.nationality}</td>
+						<td>${playerData.iplTeam}</td>
+						<td>${playerData.ownedBy}</td>
+						<td>${playerData.bid}</td>
+						<td>${playerData.points}</td>
+					</tr>
+				</c:forEach>
+			</tbody>
 		</table>
 	</div>
 	<script type="text/javascript" src="/js/ipl.js"></script>

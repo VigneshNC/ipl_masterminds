@@ -2,13 +2,13 @@ $(document).ready(function() {
 	$("body").css("background-color", "#3D4D61").css("font-family", "Ubuntu, 'times new roman', times, roman, serif");
 	$(".container").addClass("rounded").css("background-color", "#F3CA20").css("padding-bottom", "15px");
 
-	$("#btnSaveOrUpdateUser").on("click", function() {
-		var registerUserData = $("#registerForm").serializeObject();
+	$("#btnSaveOrUpdate").on("click", function() {
+		var registerData = $("#registerForm").serializeObject();
 		$.ajax({
 			type: "post",
 			url: "/ipl/save",
 			contentType: "application/json",
-			data: JSON.stringify(registerUserData),
+			data: JSON.stringify(registerData),
 			success: function(userInfo) {
 				console.log("Result: " + userInfo);
 				let userId = JSON.parse(userInfo).id;
@@ -37,11 +37,11 @@ $(document).ready(function() {
 	};
 	
 	$('.nav-item').removeClass('active');
-	$("#btnBackUser").hide();
+	$("#btnBack").hide();
 	
 	if (window.location.pathname.includes("ipl/register")) {
 		$("#h1user").html("Registeration Form");
-		$("#btnSaveOrUpdateUser").html("Save");
+		$("#btnSaveOrUpdate").html("Save");
 		$("#navItemRegister").addClass('active');
 		$("#navItemUsers").hide();
 	} else if (window.location.pathname.includes("ipl/users")) {
@@ -52,23 +52,19 @@ $(document).ready(function() {
 		$("#h1user").html("Registeration Form");
 		$("#navItemRules").addClass('active');
 		$("#navItemUsers").show();
-	} else if (window.location.pathname.includes("user/view")) {
+	} else if (window.location.pathname.includes("view")) {
 		$("#navItemUsers").show();
 		document.cookie = "isLogin=yes; path=/";
-	} else if (window.location.pathname.includes("user/edit")) {
+	} else if (window.location.pathname.includes("edit")) {
 		$("#h1user").html("Edit Participant");
-		$("#btnSaveOrUpdateUser").html("Update");
+		$("#btnSaveOrUpdate").html("Update");
 		$("#navItemUsers").show();
-		$("#btnBackUser").show();
+		$("#btnBack").show();
 	} else if (window.location.pathname.includes("ipl/login")) {
 		$("#h1user").html("Login Form");
 	} else if (window.location.pathname.includes("ipl/logout")) {
 		isLogin = "no";
 		document.cookie = "isLogin=; path=/";
-	} else if (window.location.pathname.includes("player")) {
-		$("#btnSaveOrUpdatePlayer").html("Save");
-	} else if (window.location.pathname.includes("player/edit")) {
-		$("#btnSaveOrUpdatePlayer").html("Update");
 	}
 	
 	if (document.cookie && document.cookie.includes("isLogin=yes")) {
@@ -138,38 +134,11 @@ $(document).ready(function() {
 		});
 	});
 	
-	$("#btnEditUser").on("click", function() {
+	$("#btnEdit").on("click", function() {
 		window.location="/ipl/user/" + $("#userId").val() + "/edit";
 	});
 	
-	$("#btnBackUser").on("click", function() {
+	$("#btnBack").on("click", function() {
 		window.location = window.location.pathname.replace("edit", "view");
 	});
-	
-	$("#btnAddPlayer").on("click", function() {
-		window.location = "/ipl/player";
-	});
-	
-	$("#btnSaveOrUpdatePlayer").on("click", function() {
-		var playerData = $("#playerForm").serializeObject();
-		$.ajax({
-			type: "post",
-			url: "/ipl/savePlayer",
-			contentType: "application/json",
-			data: JSON.stringify(playerData),
-			success: function(playerInfo) {
-				console.log("Result: " + playerInfo);
-				let userId = JSON.parse(playerInfo).id;
-				// window.location = "/ipl/user/" + userId;
-			},
-			error: function(error) {
-				console.log("Error: " + error);
-			}
-		});
-	});
-	
-	$("#btnBackPlayer").on("click", function() {
-		window.location = "/ipl/playersList";
-	});
-	
 });

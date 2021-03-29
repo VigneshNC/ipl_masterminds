@@ -19,4 +19,8 @@ public interface IplService {
 
 	public PlayerInfo getPlayerById(Long id);
 	
+	public void saveOrUpdate(PlayerInfo playerInfo);
+
+	public List<PlayerInfo> getAllPlayers();
+	
 }
