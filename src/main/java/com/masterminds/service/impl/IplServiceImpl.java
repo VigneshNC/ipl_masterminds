@@ -60,5 +60,15 @@ public class IplServiceImpl implements IplService {
 	public void deletePlayerById(Long id) {
 		iplDAO.deletePlayerById(id);
 	}
+
+	@Override
+	public void approveUserById(Long id) {
+		iplDAO.approveUserById(id);
+	}
+
+	@Override
+	public void rejectUserById(Long id) {
+		iplDAO.rejectUserById(id);		
+	}
 	
 }

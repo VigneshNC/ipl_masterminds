@@ -35,6 +35,7 @@
 				</tr>
 			</tbody>
 		</table>
+		<input type="hidden" id="userOrAdmin" value="${userOrAdmin}" class="form-control" />
 	</div>
 	<script type="text/javascript" src="/js/ipl.js"></script>
 </body>

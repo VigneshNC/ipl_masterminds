@@ -56,6 +56,7 @@ public class IplController {
 		try {
 			UserInfo userInfo = mapper.readValue(userInfoStr, UserInfo.class);
 			if (userInfo != null) {
+				userInfo.setRole("requestor");
 				System.out.println("UserInfo: " + mapper.writeValueAsString(userInfo));
 				iplService.saveOrUpdate(userInfo);
 				result = mapper.writeValueAsString(userInfo);
@@ -72,7 +73,14 @@ public class IplController {
 	public ModelAndView getUserById(@PathVariable Long id) {
 		ModelAndView userView = new ModelAndView("profile");
 		UserInfo userInfo = iplService.getById(id);
-		userView.addObject("userData", userInfo);
+		if (userInfo != null) {
+			userView.addObject("userData", userInfo);
+			String userOrAdmin = "user";
+			if ("admin".equals(userInfo.getUsername())) {
+				userOrAdmin = "admin";
+			}
+			userView.addObject("userOrAdmin", userOrAdmin);
+		}
 		return userView;
 	}
 	
@@ -88,8 +96,16 @@ public class IplController {
 	public ModelAndView getAllUsers() throws JsonProcessingException {
 		ModelAndView usersView = new ModelAndView("users");
 		List<UserInfo> usersInfo = iplService.getAll();
-		System.out.println("Users: " + mapper.writeValueAsString(usersInfo));
-		usersView.addObject("usersData", usersInfo);
+		List<UserInfo> authenticatedUsers = new ArrayList<>();
+		if (usersInfo != null && usersInfo.size() > 0) {
+			for (UserInfo userInfo : usersInfo) {
+				if ("participant".equals(userInfo.getRole())) {
+					authenticatedUsers.add(userInfo);
+				}
+			}
+		}
+		System.out.println("Users: " + mapper.writeValueAsString(authenticatedUsers));
+		usersView.addObject("usersData", authenticatedUsers);
 		return usersView;
 	}
 	
@@ -179,6 +195,45 @@ public class IplController {
 	public String deletePlayerById(@PathVariable Long id) {
 		try {
 			iplService.deletePlayerById(id);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return "failed";
+		}
+		return "success";
+	}
+	
+	@GetMapping("ipl/requestors")
+	public ModelAndView requestedUsers() throws JsonProcessingException {
+		ModelAndView usersView = new ModelAndView("requestors");
+		List<UserInfo> usersInfo = iplService.getAll();
+		List<UserInfo> requestedUsers = new ArrayList<>();
+		if (usersInfo != null && usersInfo.size() > 0) {
+			for (UserInfo userInfo : usersInfo) {
+				if ("requestor".equals(userInfo.getRole())) {
+					requestedUsers.add(userInfo);
+				}
+			}
+		}
+		System.out.println("Users: " + mapper.writeValueAsString(requestedUsers));
+		usersView.addObject("usersData", requestedUsers);
+		return usersView;
+	}
+	
+	@PostMapping("ipl/user/approve/{id}")
+	public String approveUserById(@PathVariable Long id) {
+		try {
+			iplService.approveUserById(id);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return "failed";
+		}
+		return "success";
+	}
+	
+	@PostMapping("ipl/user/reject/{id}")
+	public String rejectUserById(@PathVariable Long id) {
+		try {
+			iplService.rejectUserById(id);
 		} catch(Exception e) {
 			e.printStackTrace();
 			return "failed";

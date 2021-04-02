@@ -24,5 +24,9 @@ public interface IplService {
 	public List<PlayerInfo> getAllPlayers();
 
 	public void deletePlayerById(Long id);
+
+	public void approveUserById(Long id);
+
+	public void rejectUserById(Long id);
 	
 }

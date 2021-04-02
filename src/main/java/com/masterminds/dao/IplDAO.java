@@ -24,5 +24,9 @@ public interface IplDAO {
 	public PlayerInfo getPlayerById(Long id);
 
 	public void deletePlayerById(Long id);
+
+	public void approveUserById(Long id);
+
+	public void rejectUserById(Long id);
 	
 }

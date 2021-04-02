@@ -14,6 +14,9 @@
 			<li id="navItemUsers" class="nav-item">
 				<a class="nav-link" href="/ipl/users">Show Participants</a>
 			</li>
+			<li id="navItemRequestors" class="nav-item">
+				<a class="nav-link" href="/ipl/requestors">Requestors</a>
+			</li>
 			<li id="navItemRules" class="nav-item">
 				<a class="nav-link" href="/ipl/rules">Rules</a>
 			</li>

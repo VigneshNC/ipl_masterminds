@@ -35,6 +35,9 @@ public class UserInfo {
 	@Column(name = "team_name", unique = true)
 	private String teamName;
 	
+	@Column(name="role")
+	private String role;
+	
 	@Column(name = "created_date")
 	private Date createdDate;
 	
@@ -89,6 +92,14 @@ public class UserInfo {
 		this.teamName = teamName;
 	}
 	
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
 	public Date getCreatedDate() {
 		return createdDate;
 	}

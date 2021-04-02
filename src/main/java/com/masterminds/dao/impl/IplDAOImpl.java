@@ -108,4 +108,28 @@ public class IplDAOImpl implements IplDAO {
 		session.flush();
 	}
 
+	@Override
+	public void approveUserById(Long id) {
+		Session session = sessionFactory.getCurrentSession();
+		UserInfo userInfo = getById(id);
+		if (userInfo != null) {
+			userInfo.setRole("participant");
+			userInfo.setModifiedDate(new Date());
+			session.update(userInfo);
+			session.flush();
+		}
+	}
+
+	@Override
+	public void rejectUserById(Long id) {
+		Session session = sessionFactory.getCurrentSession();
+		UserInfo userInfo = getById(id);
+		if (userInfo != null) {
+			userInfo.setRole("requestor");
+			userInfo.setModifiedDate(new Date());
+			session.update(userInfo);
+			session.flush();
+		}		
+	}
+
 }

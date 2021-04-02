@@ -5,7 +5,7 @@
 <html>
 <head>
 	<meta charset="ISO-8859-1">
-	<title>Participants: IPL - Masterminds</title>
+	<title>Insert title here</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -16,7 +16,7 @@
 	<jsp:include page="navbar.jsp" />
 	
 	<div class="container pt-3">
-		<h1>Participants</h1>
+		<h1>Requestors</h1>
 		<hr />
 		<table class="table table-hover table-dark" id="tableUser">
 			<thead>
@@ -35,10 +35,7 @@
 						<td>${user.lastName}</td>
 						<td>${user.username}</td>
 						<td>${user.teamName}</td>
-						<td>
-							<button id="${user.id}" class="btn btn-danger delete">Delete</button>
-							<button id="${user.id}" class="btn btn-danger reject">Reject</button>
-						</td>
+						<td><button id="${user.id}" class="btn btn-primary approve">Approve</button>
 					</tr>
 				</c:forEach>
 			</tbody>
