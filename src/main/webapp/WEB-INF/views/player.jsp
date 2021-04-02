@@ -40,11 +40,17 @@
 			</div>
 			<div class="form-group">
 				<label class="font-weight-bold" for="bid">Bid</label>
-				<!-- <div class="form-check-inline">
-					<input type="radio" id="bidYes" name="bid" value="yes" class="form-check-input">Yes 
-					<input type="radio" id="bidNo" name="bid" value="no" class="form-check-input">No
-				</div> -->
-				<input type="text" id="bid" name="bid" value="${playerData.bid}" class="form-control font-weight-bold" placeholder="Enter bid as yes or no" />
+				<div class="form-check-inline">
+					<label class="form-check-label" for="rdBidYes">
+						<input type="radio" class="form-check-input" id="rdBidYes" name="bid" value="Yes">Yes
+					</label>
+				</div>
+				<div class="form-check-inline">
+					<label class="form-check-label" for="rdBidNo">
+						<input type="radio" class="form-check-input" id="rdBidNo" name="bid" value="No">No
+					</label>
+				</div>
+				<%-- <input type="text" id="bid" name="bid" value="${playerData.bid}" class="form-control font-weight-bold" placeholder="Enter bid as yes or no" /> --%>
 			</div>
 			<div class="form-group">
 				<label class="font-weight-bold" for="points">Points</label>
@@ -55,6 +61,15 @@
 		<br>
 		<button id="btnBackPlayer" class="btn btn-primary">Back</button>
 	</div>
+	<script>
+		if ("${playerData}" != undefined) {
+			if ("${playerData.bid}" == "Yes") {
+				$("#rdBidYes").prop("checked", true);
+			} else if ("${playerData.bid}" == "No") {
+				$("#rdBidNo").prop("checked", true);
+			}
+		}
+	</script>
 	<script type="text/javascript" src="/js/ipl.js"></script>
 </body>
 </html>

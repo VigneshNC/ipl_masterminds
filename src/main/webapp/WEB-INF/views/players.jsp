@@ -13,6 +13,7 @@
 </head>
 <body>
 	<jsp:include page="navbar.jsp" />
+	<jsp:include page="modal.jsp" />
 	
 	<div class="container pt-3">
 		<h1>List of Players</h1>
@@ -29,6 +30,7 @@
 					<td>Owner</td>
 					<td>Bid</td>
 					<td>Points</td>
+					<td>Action</td>
 				</tr>
 			</thead>
 			<tbody id="tBodyPlayers">
@@ -41,11 +43,20 @@
 						<td>${playerData.ownedBy}</td>
 						<td>${playerData.bid}</td>
 						<td>${playerData.points}</td>
+						<td>
+							<button id="btnEditPlayer" onclick="editPlayer(${playerData.id})" class="btn btn-primary">Edit</button>
+							<button id="${playerData.id}" class="btn btn-danger deletePlayer">Delete</button>
+						</td>
 					</tr>
 				</c:forEach>
 			</tbody>
 		</table>
 	</div>
+	<script>
+		function editPlayer(playerId) {
+			window.location = "/ipl/player/edit/" + playerId;
+		}
+	</script>
 	<script type="text/javascript" src="/js/ipl.js"></script>
 </body>
 </html>

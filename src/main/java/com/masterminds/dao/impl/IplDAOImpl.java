@@ -94,4 +94,18 @@ public class IplDAOImpl implements IplDAO {
 		return playerList;
 	}
 
+	@Override
+	public PlayerInfo getPlayerById(Long id) {
+		Session session = sessionFactory.getCurrentSession();
+		PlayerInfo playerInfo = session.get(PlayerInfo.class, id);
+		return playerInfo;
+	}
+
+	@Override
+	public void deletePlayerById(Long id) {
+		Session session = sessionFactory.getCurrentSession();
+		session.delete(getPlayerById(id));
+		session.flush();
+	}
+
 }

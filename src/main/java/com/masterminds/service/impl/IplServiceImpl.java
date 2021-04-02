@@ -43,8 +43,7 @@ public class IplServiceImpl implements IplService {
 
 	@Override
 	public PlayerInfo getPlayerById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		return iplDAO.getPlayerById(id);
 	}
 
 	@Override
@@ -55,6 +54,11 @@ public class IplServiceImpl implements IplService {
 	@Override
 	public List<PlayerInfo> getAllPlayers() {
 		return iplDAO.getAllPlayers();
+	}
+
+	@Override
+	public void deletePlayerById(Long id) {
+		iplDAO.deletePlayerById(id);
 	}
 	
 }

@@ -20,5 +20,9 @@ public interface IplDAO {
 	public void saveOrUpdate(PlayerInfo playerInfo);
 
 	public List<PlayerInfo> getAllPlayers();
+
+	public PlayerInfo getPlayerById(Long id);
+
+	public void deletePlayerById(Long id);
 	
 }

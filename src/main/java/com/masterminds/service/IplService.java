@@ -22,5 +22,7 @@ public interface IplService {
 	public void saveOrUpdate(PlayerInfo playerInfo);
 
 	public List<PlayerInfo> getAllPlayers();
+
+	public void deletePlayerById(Long id);
 	
 }

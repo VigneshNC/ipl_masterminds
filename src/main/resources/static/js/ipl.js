@@ -38,6 +38,7 @@ $(document).ready(function() {
 	
 	$('.nav-item').removeClass('active');
 	$("#btnBackUser").hide();
+	/*var rolesToUI = "";*/
 	
 	if (window.location.pathname.includes("ipl/register")) {
 		$("#h1user").html("Registeration Form");
@@ -65,10 +66,22 @@ $(document).ready(function() {
 	} else if (window.location.pathname.includes("ipl/logout")) {
 		isLogin = "no";
 		document.cookie = "isLogin=; path=/";
-	} else if (window.location.pathname.includes("player")) {
-		$("#btnSaveOrUpdatePlayer").html("Save");
 	} else if (window.location.pathname.includes("player/edit")) {
+		/*rolesToUI = "";
+		for(var roleIndex = 0; roleIndex < productArray.length; roleIndex++) {
+		    rolesToUI += "<option value='" + productArray[i] + "'>" + productArray[i] + "</option>";
+		}
+		$( 'select[name="inptProduct"]' ).append(rolesToUI);*/
 		$("#btnSaveOrUpdatePlayer").html("Update");
+	} else if (window.location.pathname.includes("player")) {
+		/*rolesToUI = "";
+		let roles = "${roles}";
+		console.log("roles: " + roles);
+		for(var roleIndex = 0; roleIndex < roles.length; roleIndex++) {
+		    roles += "<option value='" + roles[i] + "'>" + roles[i] + "</option>";
+		}
+		$('select[name="inptProduct"]').append(rolesToUI);*/
+		$("#btnSaveOrUpdatePlayer").html("Save");
 	}
 	
 	if (document.cookie && document.cookie.includes("isLogin=yes")) {
@@ -93,6 +106,7 @@ $(document).ready(function() {
 	
 	$(".delete").on("click", function() {
 		$(".modal-body").html("Are you sure to Delete the participant?");
+		$(".modal-title").html("Delete participant");
 		$("#btnDelete").show();
 		$("#btnOkayOrCancel").html("Cancel");
 		$("#idModal").val($(this).prop("id"));
@@ -101,18 +115,34 @@ $(document).ready(function() {
 	
 	$("#btnDelete").on("click", function() {
 		if ($("#idModal").val() != undefined && $("#idModal").val() > 0) {
-			$.ajax({
-				type: "delete",
-				url: "/ipl/delete/" + $("#idModal").val(),
-				success: function(result) {
-					if (result == "success") {
-						window.location = "/ipl/users"
+			let title = $(".modal-title").html();
+			if (title == "Delete participant") {
+				$.ajax({
+					type: "delete",
+					url: "/ipl/delete/" + $("#idModal").val(),
+					success: function(result) {
+						if (result == "success") {
+							window.location = "/ipl/users"
+						}
+					},
+					error: function(error) {
+						console.log("Error: " + error);
 					}
-				},
-				error: function(error) {
-					console.log("Error: " + error);
-				}
-			});
+				});
+			} else if (title == "Delete player") {
+				$.ajax({
+					type: "delete",
+					url: "/ipl/player/delete/" + $("#idModal").val(),
+					success: function(result) {
+						if (result == "success") {
+							window.location = "/ipl/playersList"
+						}
+					},
+					error: function(error) {
+						console.log("Error: " + error);
+					}
+				});
+			}
 		}
 	});
 	
@@ -160,7 +190,7 @@ $(document).ready(function() {
 			success: function(playerInfo) {
 				console.log("Result: " + playerInfo);
 				let userId = JSON.parse(playerInfo).id;
-				// window.location = "/ipl/user/" + userId;
+				window.location = "/ipl/playersList";
 			},
 			error: function(error) {
 				console.log("Error: " + error);
@@ -170,6 +200,15 @@ $(document).ready(function() {
 	
 	$("#btnBackPlayer").on("click", function() {
 		window.location = "/ipl/playersList";
+	});
+	
+	$(".deletePlayer").on("click", function() {
+		$(".modal-body").html("Are you sure to Delete the player?");
+		$(".modal-title").html("Delete player");
+		$("#btnDelete").show();
+		$("#btnOkayOrCancel").html("Cancel");
+		$("#idModal").val($(this).prop("id"));
+		$("#myModal").modal("show");
 	});
 	
 });

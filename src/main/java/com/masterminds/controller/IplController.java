@@ -1,5 +1,6 @@
 package com.masterminds.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -21,7 +21,7 @@ import com.masterminds.entity.UserInfo;
 import com.masterminds.service.IplService;
 
 @RestController
-@RequestMapping("ipl")
+//@RequestMapping("ipl")
 public class IplController {
 	
 	@Autowired
@@ -29,22 +29,27 @@ public class IplController {
 
 	ObjectMapper mapper = new ObjectMapper();
 	
-	@GetMapping
-	public ModelAndView home() {
+	@GetMapping({"/", "/ipl"})
+	public ModelAndView origin() {
 		return new ModelAndView("ipl_home");
 	}
 	
-	@GetMapping("logout")
+//	@GetMapping("/ipl")
+//	public ModelAndView home() {
+//		return new ModelAndView("ipl_home");
+//	}
+	
+	@GetMapping("ipl/logout")
 	public ModelAndView logout() {
 		return new ModelAndView("ipl_home");
 	}
 	
-	@GetMapping("register")
+	@GetMapping("ipl/register")
 	public ModelAndView register() {
 		return new ModelAndView("user");
 	}
 	
-	@PostMapping("save")
+	@PostMapping("ipl/save")
 	public String saveUserInfo(@RequestBody String userInfoStr) {
 		System.out.println("userInfoStr: " + userInfoStr);
 		String result = "";
@@ -63,7 +68,7 @@ public class IplController {
 		return result;
 	}
 	
-	@GetMapping("user/view/{id}")
+	@GetMapping("ipl/user/view/{id}")
 	public ModelAndView getUserById(@PathVariable Long id) {
 		ModelAndView userView = new ModelAndView("profile");
 		UserInfo userInfo = iplService.getById(id);
@@ -71,7 +76,7 @@ public class IplController {
 		return userView;
 	}
 	
-	@GetMapping("user/edit/{id}")
+	@GetMapping("ipl/user/edit/{id}")
 	public ModelAndView editUserById(@PathVariable Long id) {
 		ModelAndView userView = new ModelAndView("user");
 		UserInfo userInfo = iplService.getById(id);
@@ -79,7 +84,7 @@ public class IplController {
 		return userView;
 	}
 	
-	@GetMapping("users")
+	@GetMapping("ipl/users")
 	public ModelAndView getAllUsers() throws JsonProcessingException {
 		ModelAndView usersView = new ModelAndView("users");
 		List<UserInfo> usersInfo = iplService.getAll();
@@ -88,7 +93,7 @@ public class IplController {
 		return usersView;
 	}
 	
-	@DeleteMapping("delete/{id}")
+	@DeleteMapping("ipl/delete/{id}")
 	public String deleteByUserId(@PathVariable Long id) {
 		try {
 			iplService.deleteById(id);
@@ -99,17 +104,17 @@ public class IplController {
 		return "success";
 	}
 	
-	@GetMapping("rules")
+	@GetMapping("ipl/rules")
 	public ModelAndView getRules() {
 		return new ModelAndView("rules");
 	}
 	
-	@GetMapping("login")
+	@GetMapping("ipl/login")
 	public ModelAndView login() {
 		return new ModelAndView("login");
 	}
 	
-	@GetMapping("authenticate")
+	@GetMapping("ipl/authenticate")
 	public Long authenticate(@RequestParam String username, @RequestParam String password) {
 		UserInfo user = iplService.getByUsernameAndPassword(username, password);
 		if (user != null) {
@@ -118,7 +123,7 @@ public class IplController {
 		return 0L;
 	}
 
-	@GetMapping("playersList")
+	@GetMapping("ipl/playersList")
 	public ModelAndView getPlayers() throws JsonProcessingException {
 		ModelAndView playersView = new ModelAndView("players");
 		List<PlayerInfo> playersInfo = iplService.getAllPlayers();
@@ -127,20 +132,31 @@ public class IplController {
 		return playersView;
 	}
 	
-	@GetMapping("player")
+	@GetMapping("ipl/player")
 	public ModelAndView addPlayer() {
-		return new ModelAndView("player");
+		ModelAndView playerView = new ModelAndView("player");
+		List<String> roles = new ArrayList<>();
+		roles.add("Batsman");
+		roles.add("Bowler");
+		roles.add("All-Rounder");
+		playerView.addObject("roles", roles);
+		return playerView;
 	}
 	
-	@GetMapping("player/edit/{id}")
-	public ModelAndView addPlayer(@PathVariable Long id) {
+	@GetMapping("ipl/player/edit/{id}")
+	public ModelAndView editPlayer(@PathVariable Long id) {
 		ModelAndView playerView = new ModelAndView("player");
 		PlayerInfo playerInfo = iplService.getPlayerById(id);
+		try {
+			System.out.println("Player: " + mapper.writeValueAsString(playerInfo));
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
 		playerView.addObject("playerData", playerInfo);
 		return playerView;
 	}
 	
-	@PostMapping("savePlayer")
+	@PostMapping("ipl/savePlayer")
 	public String savePlayer(@RequestBody String playerInfoStr) {
 		System.out.println("userInfoStr: " + playerInfoStr);
 		String result = "";
@@ -157,6 +173,17 @@ public class IplController {
 			e.printStackTrace();
 		}
 		return result;
+	}
+	
+	@DeleteMapping("ipl/player/delete/{id}")
+	public String deletePlayerById(@PathVariable Long id) {
+		try {
+			iplService.deletePlayerById(id);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return "failed";
+		}
+		return "success";
 	}
 	
 }

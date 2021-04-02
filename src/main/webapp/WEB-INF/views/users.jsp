@@ -25,7 +25,7 @@
 					<td>Last Name</td>
 					<td>Username</td>
 					<td>Team Name</td>
-					<!-- <td>Action</td> -->
+					<td>Action</td>
 				</tr>
 			</thead>
 			<tbody id="tBodyUsers">
@@ -35,7 +35,7 @@
 						<td>${user.lastName}</td>
 						<td>${user.username}</td>
 						<td>${user.teamName}</td>
-						<%-- <td><button id="${user.id}" class="btn btn-danger delete">Delete</button> --%>
+						<td><button id="${user.id}" class="btn btn-danger delete">Delete</button>
 					</tr>
 				</c:forEach>
 			</tbody>
