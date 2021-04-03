@@ -9,17 +9,36 @@ $(document).ready(function() {
 			url: "/ipl/save",
 			contentType: "application/json",
 			data: JSON.stringify(registerUserData),
-			success: function(userInfo) {
-				Swal.fire({
-					icon: "success",
-					text: "Your registration is submitted. Please wait for the approval!",
-					confirmButtonText: "Okay",
-				}).then((result) => {
-					if (result.isConfirmed) {
-						window.location.href = "/ipl/register";
+			success: function(userData) {
+				if (userData) {
+					if (userData.status && userData.status == "duplicate") {
+						Swal.fire({
+							icon: "error",
+							text: userData.reason + " is already exists!",
+							confirmButtonText: "Okay"
+						}).then((result) => {
+							if (result.isConfirmed) {
+								window.location.href = "/ipl/register";
+							}
+						});
+					} else {
+						Swal.fire({
+							icon: "success",
+							text: "Your registration is submitted. Please wait for the approval!",
+							confirmButtonText: "Okay"
+						}).then((result) => {
+							if (result.isConfirmed) {
+								window.location.href = "/ipl/register";
+							}
+						});
 					}
-				});
-				console.log("Result: " + userInfo);
+				} else {
+					Swal.fire({
+						icon: "error",
+						text: "Please enter in the required fields!"
+					});
+				}
+				console.log("Result: " + userData);
 			},
 			error: function(error) {
 				console.log("Error: " + error);
@@ -95,19 +114,23 @@ $(document).ready(function() {
 		}
 		$('select[name="inptProduct"]').append(rolesToUI);*/
 		$("#btnSaveOrUpdatePlayer").html("Save");
+	} else if (window.location.pathname.includes("ipl/playersList")) {
+		if (document.cookie.includes("userOrAdmin=admin")) {
+			$("#btnAddPlayer").show();
+		} else {
+			$("#btnAddPlayer").hide();
+		}
 	}
 	
-	if (document.cookie) {
-		if (document.cookie.includes("userOrAdmin=admin")) {
-			$("#navItemLogout, #navItemUsers, #navItemPlayers, #navItemRequestors").show();
-			$("#navItemLogin, #navItemRegister").hide();
-		} else if (document.cookie.includes("userOrAdmin=user")) {
-			$("#navItemLogout").show();
-			$("#navItemLogin, #navItemRegister, #navItemUsers, #navItemPlayers, #navItemRequestors").hide();
-		} else {
-			$("#navItemLogin").show();
-			$("#navItemLogout, #navItemUsers, #navItemPlayers, #navItemRules, #navItemRequestors").hide();
-		}
+	if (document.cookie.includes("userOrAdmin=admin")) {
+		$("#navItemLogout, #navItemUsers, #navItemPlayers, #navItemRequestors").show();
+		$("#navItemLogin, #navItemRegister").hide();
+	} else if (document.cookie.includes("userOrAdmin=user")) {
+		$("#navItemLogout").show();
+		$("#navItemLogin, #navItemRegister, #navItemUsers, #navItemPlayers, #navItemRequestors").hide();
+	} else {
+		$("#navItemLogin").show();
+		$("#navItemLogout, #navItemUsers, #navItemPlayers, #navItemRules, #navItemRequestors").hide();
 	}
 	
 	
@@ -135,7 +158,12 @@ $(document).ready(function() {
 						if (result == "success") {
 							Swal.fire({
 								icon: "success",
-								text: "Player is deleted!"
+								text: "Participant is deleted!",
+								confirmButtonText: "Okay"
+							}).then((result) => {
+								if (result.isConfirmed) {
+									window.location.href = "/ipl/users";
+								}
 							});
 						}
 					},
@@ -167,8 +195,8 @@ $(document).ready(function() {
 				if (id == "0") {
 					Swal.fire({
 						icon: "error",
-						title: "You're not registered yet!",
-						footer: '<a href="/ipl/register">Please click here to register!</a>'
+						title: "Username or password is wrong!",
+						footer: '<a href="/ipl/register">If not registered, please click here to register!</a>'
 					})
 				} else {
 					window.location.href = "/ipl/user/view/" + id;
@@ -241,7 +269,12 @@ $(document).ready(function() {
 						if (result == "success") {
 							Swal.fire({
 								icon: "success",
-								text: "Player is deleted!"
+								text: "Player is deleted!",
+								confirmButtonText: "Okay"
+							}).then((result) => {
+								if (result.isConfirmed) {
+									window.location.href = "/ipl/playersList";
+								}
 							});
 						}
 					},
@@ -347,5 +380,9 @@ $(document).ready(function() {
 			}
 		});
 	});
+	
+	function validation() {
+		
+	}
 	
 });

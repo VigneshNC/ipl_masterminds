@@ -1,7 +1,9 @@
 package com.masterminds.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -50,23 +52,38 @@ public class IplController {
 	}
 	
 	@PostMapping("ipl/save")
-	public String saveUserInfo(@RequestBody String userInfoStr) {
+	public Map<String, String> saveUserInfo(@RequestBody String userInfoStr) throws JsonMappingException, JsonProcessingException {
 		System.out.println("userInfoStr: " + userInfoStr);
-		String result = "";
-		try {
-			UserInfo userInfo = mapper.readValue(userInfoStr, UserInfo.class);
-			if (userInfo != null) {
-				userInfo.setRole("requestor");
-				System.out.println("UserInfo: " + mapper.writeValueAsString(userInfo));
-				iplService.saveOrUpdate(userInfo);
-				result = mapper.writeValueAsString(userInfo);
+		Map<String, String> resultMap = new HashMap<>();
+		UserInfo userInfo = mapper.readValue(userInfoStr, UserInfo.class);
+		if (userInfo != null) {
+			List<UserInfo> users = iplService.getAll();
+			if (users != null && users.size() > 0) {
+				for (UserInfo user : users) {
+					if (user.getUsername() != null && user.getUsername().equalsIgnoreCase(userInfo.getUsername())) {
+						resultMap.put("status", "duplicate");
+						resultMap.put("reason", "username");
+						return resultMap;
+					} else if (user.getTeamName() != null && user.getTeamName().equalsIgnoreCase(userInfo.getTeamName())) {
+						resultMap.put("status", "duplicate");
+						resultMap.put("reason", "teamname");
+						return resultMap;
+					}
+				}
 			}
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
+			
+			userInfo.setRole("requestor");
+			System.out.println("UserInfo: " + mapper.writeValueAsString(userInfo));
+			try {
+				iplService.saveOrUpdate(userInfo);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			String userDataStr = mapper.writeValueAsString(userInfo);
+			resultMap.put("status", "success");
+			resultMap.put("userInfo", userDataStr);
 		}
-		return result;
+		return resultMap;
 	}
 	
 	@GetMapping("ipl/user/view/{id}")
