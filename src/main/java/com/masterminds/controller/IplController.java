@@ -1,5 +1,6 @@
 package com.masterminds.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,12 +14,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.masterminds.entity.PlayerInfo;
+import com.masterminds.entity.PointsTable;
 import com.masterminds.entity.UserInfo;
 import com.masterminds.service.IplService;
 
@@ -151,6 +154,9 @@ public class IplController {
 	public Long authenticate(@RequestParam String username, @RequestParam String password) {
 		UserInfo user = iplService.getByUsernameAndPassword(username, password);
 		if (user != null) {
+			if ("requestor".equals(user.getRole())) {
+				return 1L;
+			}
 			return user.getId();
 		}
 		return 0L;
@@ -256,6 +262,26 @@ public class IplController {
 			return "failed";
 		}
 		return "success";
+	}
+	
+	@PostMapping("ipl/importplayers")
+	public String importPlayers(@RequestBody MultipartFile file) throws IOException {
+		System.out.println("File: " + file.getOriginalFilename());
+		System.out.println("File type: " + file.getContentType());
+		List<PlayerInfo> players = iplService.excelToIpl(file);
+		for (PlayerInfo playerInfo : players) {
+			iplService.saveOrUpdate(playerInfo);
+		}
+		System.out.println("Imported Players size: " + players.size());
+		return "";
+	}
+	
+	@GetMapping("ipl/pointsTable")
+	public ModelAndView getParticipants() {
+		List<PointsTable> pointsTable = iplService.getAllParticpants();
+		ModelAndView mv = new ModelAndView("breakdown");
+		mv.addObject("pointsTable", pointsTable);
+		return mv;
 	}
 	
 }

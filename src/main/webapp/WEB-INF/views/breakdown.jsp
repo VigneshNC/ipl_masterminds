@@ -5,37 +5,29 @@
 <html>
 <head>
 	<meta charset="ISO-8859-1">
-	<title>Requestors: IPL - Masterminds</title>
+	<title>Breakdown: IPL - Masterminds</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Ubuntu:regular,bold&subset=Latin">
-	<script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
 <body>
 	<jsp:include page="navbar.jsp" />
 	
 	<div class="container pt-3">
-		<h1>Requestors</h1>
-		<hr />
-		<table class="table table-hover table-dark" id="tableUser">
+		<h1>Points Table</h1>
+		<table class="table table-dark table-hover">
 			<thead>
 				<tr>
-					<td>First Name</td>
-					<td>Last Name</td>
-					<td>Username</td>
-					<td>Team Name</td>
-					<td>Action</td>
+					<td>MasterMinds</td>
+					<td>Total Points</td>
 				</tr>
 			</thead>
-			<tbody id="tBodyUsers">
-				<c:forEach items="${usersData}" var="user">
+			<tbody>
+				<c:forEach items="${pointsTable}" var="point">
 					<tr>
-						<td>${user.firstName}</td>
-						<td>${user.lastName}</td>
-						<td>${user.username}</td>
-						<td>${user.teamName}</td>
-						<td><button id="${user.id}" class="btn btn-primary approve">Approve</button>
+						<td>${point.participant}</td>
+						<td>${point.points}</td>
 					</tr>
 				</c:forEach>
 			</tbody>

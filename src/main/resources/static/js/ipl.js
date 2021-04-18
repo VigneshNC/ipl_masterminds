@@ -197,7 +197,12 @@ $(document).ready(function() {
 						icon: "error",
 						title: "Username or password is wrong!",
 						footer: '<a href="/ipl/register">If not registered, please click here to register!</a>'
-					})
+					});
+				} else if (id == "1") {
+					Swal.fire({
+						icon: "info",
+						title: "Your account is in pending, please wait for the approval!",
+					});
 				} else {
 					window.location.href = "/ipl/user/view/" + id;
 				}
@@ -381,6 +386,32 @@ $(document).ready(function() {
 		});
 	});
 	
+	$("#btnImportPlayers").on("click", function() {
+		let formData = new FormData();
+		formData.append('file', $("#fileImportPlayers")[0].files[0]);
+		$.ajax({
+			type: "POST",
+			url: "/ipl/importplayers",
+			data: formData,
+			contentType: false,
+			processData: false,
+			enctype: 'multipart/form-data',
+			success: function(result) {
+				Swal.fire({
+					icon: "success",
+					text: "Players are imported successfully!"
+				});
+			},
+			error: function(err) {
+				Swal.fire({
+					icon: "error",
+					text: "Players are not imported!"
+				});
+			}
+		});
+	});
+	
+	// validation to be implemented
 	function validation() {
 		
 	}

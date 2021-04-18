@@ -1,8 +1,12 @@
 package com.masterminds.service;
 
 import java.util.List;
+import java.util.Map;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.masterminds.entity.PlayerInfo;
+import com.masterminds.entity.PointsTable;
 import com.masterminds.entity.UserInfo;
 
 public interface IplService {
@@ -28,5 +32,9 @@ public interface IplService {
 	public void approveUserById(Long id);
 
 	public void rejectUserById(Long id);
+	
+	public List<PlayerInfo> excelToIpl(MultipartFile file);
+
+	public List<PointsTable> getAllParticpants();
 	
 }

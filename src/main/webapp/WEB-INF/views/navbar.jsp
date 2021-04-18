@@ -11,6 +11,9 @@
 			<li id="navItemPlayers" class="nav-item">
 				<a class="nav-link" href="/ipl/playersList">Players</a>
 			</li>
+			<li id="navItemPointsTable" class="nav-item">
+				<a class="nav-link" href="/ipl/pointsTable">Points Table</a>
+			</li>
 			<li id="navItemUsers" class="nav-item">
 				<a class="nav-link" href="/ipl/users">Show Participants</a>
 			</li>

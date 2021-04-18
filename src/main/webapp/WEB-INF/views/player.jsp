@@ -35,10 +35,10 @@
 				<input type="text" id="txtIplTeam" name="iplTeam" value="${playerData.iplTeam}" class="form-control font-weight-bold" placeholder="Enter IPL Team name" />
 			</div>
 			<div class="form-group">
-				<label class="font-weight-bold" for="txtOwnedBy">Owner Name</label>
-				<input type="text" id="txtOwnedBy" name="ownedBy" value="${playerData.ownedBy}" class="form-control font-weight-bold" placeholder="Enter owner name" />
+				<label class="font-weight-bold" for="txtOwner">Owner Name</label>
+				<input type="text" id="txtOwner" name="owner" value="${playerData.owner}" class="form-control font-weight-bold" placeholder="Enter owner name" />
 			</div>
-			<div class="form-group">
+			<%-- <div class="form-group">
 				<label class="font-weight-bold" for="bid">Bid</label>
 				<div class="form-check-inline">
 					<label class="form-check-label" for="rdBidYes">
@@ -50,8 +50,8 @@
 						<input type="radio" class="form-check-input" id="rdBidNo" name="bid" value="No">No
 					</label>
 				</div>
-				<%-- <input type="text" id="bid" name="bid" value="${playerData.bid}" class="form-control font-weight-bold" placeholder="Enter bid as yes or no" /> --%>
-			</div>
+				<input type="text" id="bid" name="bid" value="${playerData.bid}" class="form-control font-weight-bold" placeholder="Enter bid as yes or no" />
+			</div> --%>
 			<div class="form-group">
 				<label class="font-weight-bold" for="points">Points</label>
 				<input type="number" id="points" name="points" value="${playerData.points}" class="form-control font-weight-bold" placeholder="Enter points" />
