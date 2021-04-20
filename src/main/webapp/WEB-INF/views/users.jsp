@@ -21,11 +21,11 @@
 		<table class="table table-hover table-dark" id="tableUser">
 			<thead>
 				<tr>
-					<td>First Name</td>
-					<td>Last Name</td>
-					<td>Username</td>
-					<td>Team Name</td>
-					<td>Action</td>
+					<th>First Name</th>
+					<th>Last Name</th>
+					<th>Username</th>
+					<th>Team Name</th>
+					<th>Action</th>
 				</tr>
 			</thead>
 			<tbody id="tBodyUsers">

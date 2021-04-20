@@ -53,8 +53,80 @@
 				<input type="text" id="bid" name="bid" value="${playerData.bid}" class="form-control font-weight-bold" placeholder="Enter bid as yes or no" />
 			</div> --%>
 			<div class="form-group">
-				<label class="font-weight-bold" for="points">Points</label>
+				<label class="font-weight-bold" for="points">Total Points</label>
 				<input type="number" id="points" name="points" value="${playerData.points}" class="form-control font-weight-bold" placeholder="Enter points" />
+			</div>
+			<div class="form-group">
+				<label class="font-weight-bold" for="match1">Match 1</label>
+				<input type="number" id="match1" name="match1" value="${playerData.match1}" class="form-control font-weight-bold" placeholder="Enter points for Match 1" />
+			</div>
+			<div class="form-group">
+				<label class="font-weight-bold" for="match2">Match 2</label>
+				<input type="number" id="match2" name="match2" value="${playerData.match2}" class="form-control font-weight-bold" placeholder="Enter points for Match 2" />
+			</div>
+			<div class="form-group">
+				<label class="font-weight-bold" for="match3">Match 3</label>
+				<input type="number" id="match3" name="match3" value="${playerData.match3}" class="form-control font-weight-bold" placeholder="Enter points for Match 3" />
+			</div>
+			<div class="form-group">
+				<label class="font-weight-bold" for="match4">Match 4</label>
+				<input type="number" id="match4" name="match4" value="${playerData.match4}" class="form-control font-weight-bold" placeholder="Enter points for Match 4" />
+			</div>
+			<div class="form-group">
+				<label class="font-weight-bold" for="match5">Match 5</label>
+				<input type="number" id="match5" name="match5" value="${playerData.match5}" class="form-control font-weight-bold" placeholder="Enter points for Match 5" />
+			</div>
+			<div class="form-group">
+				<label class="font-weight-bold" for="match6">Match 6</label>
+				<input type="number" id="match6" name="match6" value="${playerData.match6}" class="form-control font-weight-bold" placeholder="Enter points for Match 6" />
+			</div>
+			<div class="form-group">
+				<label class="font-weight-bold" for="match7">Match 7</label>
+				<input type="number" id="match7" name="match7" value="${playerData.match7}" class="form-control font-weight-bold" placeholder="Enter points for Match 7" />
+			</div>
+			<div class="form-group">
+				<label class="font-weight-bold" for="match8">Match 8</label>
+				<input type="number" id="match8" name="match8" value="${playerData.match8}" class="form-control font-weight-bold" placeholder="Enter points for Match 8" />
+			</div>
+			<div class="form-group">
+				<label class="font-weight-bold" for="match9">Match 9</label>
+				<input type="number" id="match9" name="match9" value="${playerData.match9}" class="form-control font-weight-bold" placeholder="Enter points for Match 9" />
+			</div>
+			<div class="form-group">
+				<label class="font-weight-bold" for="match10">Match 10</label>
+				<input type="number" id="match10" name="match10" value="${playerData.match10}" class="form-control font-weight-bold" placeholder="Enter points for Match 10" />
+			</div>
+			<div class="form-group">
+				<label class="font-weight-bold" for="match11">Match 11</label>
+				<input type="number" id="match11" name="match11" value="${playerData.match11}" class="form-control font-weight-bold" placeholder="Enter points for Match 11" />
+			</div>
+			<div class="form-group">
+				<label class="font-weight-bold" for="match12">Match 12</label>
+				<input type="number" id="match12" name="match12" value="${playerData.match12}" class="form-control font-weight-bold" placeholder="Enter points for Match 12" />
+			</div>
+			<div class="form-group">
+				<label class="font-weight-bold" for="match13">Match 13</label>
+				<input type="number" id="match13" name="match13" value="${playerData.match13}" class="form-control font-weight-bold" placeholder="Enter points for Match 13" />
+			</div>
+			<div class="form-group">
+				<label class="font-weight-bold" for="match14">Match 14</label>
+				<input type="number" id="match14" name="match14" value="${playerData.match14}" class="form-control font-weight-bold" placeholder="Enter points for Match 14" />
+			</div>
+			<div class="form-group">
+				<label class="font-weight-bold" for="match15">Match 15</label>
+				<input type="number" id="match15" name="match15" value="${playerData.match15}" class="form-control font-weight-bold" placeholder="Enter points for Match 15" />
+			</div>
+			<div class="form-group">
+				<label class="font-weight-bold" for="match16">Match 16</label>
+				<input type="number" id="match16" name="match16" value="${playerData.match16}" class="form-control font-weight-bold" placeholder="Enter points for Match 16" />
+			</div>
+			<div class="form-group">
+				<label class="font-weight-bold" for="match17">Match 17</label>
+				<input type="number" id="match17" name="match17" value="${playerData.match17}" class="form-control font-weight-bold" placeholder="Enter points for Match 17" />
+			</div>
+			<div class="form-group">
+				<label class="font-weight-bold" for="match18">Match 18</label>
+				<input type="number" id="match18" name="match18" value="${playerData.match18}" class="form-control font-weight-bold" placeholder="Enter points for Match 18" />
 			</div>
 			<button id="btnSaveOrUpdatePlayer" class="btn btn-primary"></button>
 		</form>

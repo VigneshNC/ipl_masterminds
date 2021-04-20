@@ -105,6 +105,13 @@ $(document).ready(function() {
 		}
 		$( 'select[name="inptProduct"]' ).append(rolesToUI);*/
 		$("#btnSaveOrUpdatePlayer").html("Update");
+	} else if (window.location.pathname.includes("ipl/playersList")) {
+		if (document.cookie.includes("userOrAdmin=admin")) {
+			$("#btnAddPlayer").show();
+		} else {
+			$("#btnAddPlayer").hide();
+		}
+		$("#navItemPlayers").addClass('active');
 	} else if (window.location.pathname.includes("player")) {
 		/*rolesToUI = "";
 		let roles = "${roles}";
@@ -114,12 +121,10 @@ $(document).ready(function() {
 		}
 		$('select[name="inptProduct"]').append(rolesToUI);*/
 		$("#btnSaveOrUpdatePlayer").html("Save");
-	} else if (window.location.pathname.includes("ipl/playersList")) {
-		if (document.cookie.includes("userOrAdmin=admin")) {
-			$("#btnAddPlayer").show();
-		} else {
-			$("#btnAddPlayer").hide();
-		}
+	} else if (window.location.pathname.includes("ipl/pointsTable")) {
+		$("#navItemPointsTable").addClass('active');
+	} else if (window.location.pathname.includes("ipl/requestors")) {
+		$("#navItemRequestors").addClass('active');
 	}
 	
 	if (document.cookie.includes("userOrAdmin=admin")) {

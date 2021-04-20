@@ -19,8 +19,8 @@
 		<table class="table table-dark table-hover">
 			<thead>
 				<tr>
-					<td>MasterMinds</td>
-					<td>Total Points</td>
+					<th>MasterMinds</th>
+					<th>Total Points</th>
 				</tr>
 			</thead>
 			<tbody>
