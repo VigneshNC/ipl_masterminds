@@ -25,7 +25,7 @@ public interface IplService {
 	
 	public void saveOrUpdate(PlayerInfo playerInfo);
 
-	public List<PlayerInfo> getAllPlayers();
+	public List<PlayerInfo> getAllPlayers(String participantName);
 
 	public void deletePlayerById(Long id);
 
@@ -35,6 +35,6 @@ public interface IplService {
 	
 	public List<PlayerInfo> excelToIpl(MultipartFile file);
 
-	public List<PointsTable> getAllParticpants();
+	public List<PointsTable> getAllParticipants(List<PlayerInfo> players);
 	
 }

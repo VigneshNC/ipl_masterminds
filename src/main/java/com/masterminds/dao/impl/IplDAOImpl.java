@@ -87,9 +87,12 @@ public class IplDAOImpl implements IplDAO {
 	}
 
 	@Override
-	public List<PlayerInfo> getAllPlayers() {
+	public List<PlayerInfo> getAllPlayers(String participantName) {
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(PlayerInfo.class);
+		if (participantName != null && !participantName.isEmpty()) {
+			criteria.add(Restrictions.eq("owner", participantName));
+		}
 		List<PlayerInfo> playerList = criteria.list();
 		return playerList;
 	}

@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -66,8 +65,8 @@ public class IplServiceImpl implements IplService {
 	}
 
 	@Override
-	public List<PlayerInfo> getAllPlayers() {
-		return iplDAO.getAllPlayers();
+	public List<PlayerInfo> getAllPlayers(String participantName) {
+		return iplDAO.getAllPlayers(participantName);
 	}
 
 	@Override
@@ -228,11 +227,10 @@ public class IplServiceImpl implements IplService {
 			throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
 		}
 	}
-
+	
 	@Override
-	public List<PointsTable> getAllParticpants() {
+	public List<PointsTable> getAllParticipants(List<PlayerInfo> players) {
 		List<PointsTable> pointsTable = new ArrayList<>();
-		List<PlayerInfo> players = iplDAO.getAllPlayers();
 		Map<String, Long> participantMap = new HashMap<>();
 		participantMap.put("Iyyappan", 0L);
 		participantMap.put("Manoj", 0L);
@@ -243,16 +241,19 @@ public class IplServiceImpl implements IplService {
 		participantMap.put("Vignesh K", 0L);
 		participantMap.put("Vignesh NC", 0L);
 		if (players != null && players.size() > 0) {
+			Long points = 0L;
 			for (PlayerInfo playerInfo : players) {
+				points = 0L;
 				if (participantMap.containsKey(playerInfo.getOwner())) {
-					Long points = participantMap.get(playerInfo.getOwner());
+					points = participantMap.get(playerInfo.getOwner());
 					points += playerInfo.getPoints();
 					participantMap.put(playerInfo.getOwner(), points);
 				}
 			}
 		}
+		PointsTable point = null;
 		for (String participant: participantMap.keySet()) {
-			PointsTable point = new PointsTable();
+			point = new PointsTable();
 			point.setParticipant(participant);
 			point.setPoints(participantMap.get(participant));
 			pointsTable.add(point);
@@ -260,5 +261,5 @@ public class IplServiceImpl implements IplService {
 		Collections.sort(pointsTable);
 		return pointsTable;
 	}
-
+	
 }

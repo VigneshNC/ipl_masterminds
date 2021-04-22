@@ -16,6 +16,7 @@
 	
 	<div class="container pt-3">
 		<h1>Points Table</h1>
+		<span class="float-right" style="color:red;"><b>Note:</b> Click on any row to open each player points of the participant.</span>
 		<table class="table table-dark table-hover">
 			<thead>
 				<tr>
@@ -23,7 +24,7 @@
 					<th>Total Points</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody id="tBodyParticipants">
 				<c:forEach items="${pointsTable}" var="point">
 					<tr>
 						<td>${point.participant}</td>

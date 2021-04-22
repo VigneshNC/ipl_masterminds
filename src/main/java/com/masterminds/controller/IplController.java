@@ -165,7 +165,7 @@ public class IplController {
 	@GetMapping("ipl/playersList")
 	public ModelAndView getPlayers() throws JsonProcessingException {
 		ModelAndView playersView = new ModelAndView("players");
-		List<PlayerInfo> playersInfo = iplService.getAllPlayers();
+		List<PlayerInfo> playersInfo = iplService.getAllPlayers(null);
 		System.out.println("Players: " + mapper.writeValueAsString(playersInfo));
 		playersView.addObject("playersData", playersInfo);
 		return playersView;
@@ -277,10 +277,28 @@ public class IplController {
 	}
 	
 	@GetMapping("ipl/pointsTable")
-	public ModelAndView getParticipants() {
-		List<PointsTable> pointsTable = iplService.getAllParticpants();
-		ModelAndView mv = new ModelAndView("breakdown");
-		mv.addObject("pointsTable", pointsTable);
+	public ModelAndView getParticipants() throws JsonProcessingException {
+		ModelAndView mv = new ModelAndView("points_table");
+		List<PlayerInfo> players = iplService.getAllPlayers(null);
+		if (players != null && players.size() > 0) {
+			List<PointsTable> pointsTable = iplService.getAllParticipants(players);
+			mv.addObject("pointsTable", pointsTable);
+		}
+		return mv;
+	}
+	
+	@GetMapping("ipl/participantPoints/{participantName}")
+	public ModelAndView showParticipantPoints(@PathVariable String participantName) {
+		ModelAndView mv = new ModelAndView("players");
+		List<PlayerInfo> players = iplService.getAllPlayers(participantName);
+		if (players != null && players.size() > 0) {
+			mv.addObject("playersData", players);
+			Long points = 0L;
+			for (PlayerInfo playerInfo : players) {
+				points += playerInfo.getPoints();
+			}
+			mv.addObject("totalPoints", points);
+		}
 		return mv;
 	}
 	

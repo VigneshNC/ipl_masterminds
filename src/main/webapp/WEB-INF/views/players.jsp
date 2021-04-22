@@ -22,21 +22,36 @@
 	<jsp:include page="navbar.jsp" />
 	
 	<div class="container pt-3">
-		<h1>List of Players</h1>
+		<h1 id="playersHead"></h1>
 		<hr />
-		<div class="form-check-inline float-right"><label><input type="file" name="file" class="form-control" id="fileImportPlayers" /></label>
-		<button class="btn btn-primary" id="btnImportPlayers">Import Players</button></div>
-		<button class="btn btn-primary" id="btnAddPlayer">Add Player</button>
-		<br /><br />
+		<input type="hidden" id="totalPoints" value="${totalPoints}" />
+		<div class="row">
+			<div class="col-md-6">
+				<!-- <button class="btn btn-primary" id="btnAddPlayer">Add Player</button> -->
+			</div>
+			<!-- <div id="divImport" class="col-md-6"> -->
+				<div id="divImport" class="col-md-6 row">
+					<input type="file" name="file" class="form-control col-md-9" id="fileImportPlayers" />
+					<button class="btn btn-primary" id="btnImportPlayers">Import Players</button>
+				<!-- </div> -->
+			</div>
+		</div>
+		<span style="color:red;"><b>Note:</b> Click on any row to edit each player.</span>
+		<div class="row">
+			<h2 class="col-md-11" id="spanTotPnts"></h2>
+			<button class="btn btn-primary" id="btnBackPointsTable">Back</button>
+		</div>
+		<hr />
 		<div id="tableDiv">
 			<table class="table table-dark table-hover">
 				<thead>
 					<tr>
+						<th>S.No</th>
 						<th>Player Name</th>
 						<th>Role</th>
 						<th>Nationality</th>
 						<th>IPL Team</th>
-						<th>Owner</th>
+						<th class="owner">Owner</th>
 						<!-- <th>Bid</th> -->
 						<th>Total Points</th>
 						<th>Match 1</th>
@@ -60,14 +75,15 @@
 						<th>Action</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody id="tBodyPlayers">
 					<c:forEach items="${playersData}" var="playerData">
 						<tr>
+							<td>${playerData.id}</td>
 							<td>${playerData.playerName}</td>
 							<td>${playerData.role}</td>
 							<td>${playerData.nationality}</td>
 							<td>${playerData.iplTeam}</td>
-							<td>${playerData.owner}</td>
+							<td class="owner">${playerData.owner}</td>
 							<%-- <td>${playerData.bid}</td> --%>
 							<td>${playerData.points}</td>
 							<td>${playerData.match1}</td>
@@ -89,7 +105,7 @@
 							<td>${playerData.match17}</td>
 							<td>${playerData.match18}</td>
 							<td>
-								<button id="btnEditPlayer" onclick="editPlayer(${playerData.id})" class="btn btn-primary">Edit</button>
+								<%-- <button id="btnEditPlayer" onclick="editPlayer(${playerData.id})" class="btn btn-primary">Edit</button> --%>
 								<button id="${playerData.id}" class="btn btn-danger deletePlayer">Delete</button>
 							</td>
 						</tr>
@@ -100,7 +116,7 @@
 	</div>
 	<script>
 		function editPlayer(playerId) {
-			window.location = "/ipl/player/edit/" + playerId;
+			window.location.href = "/ipl/player/edit/" + playerId;
 		}
 	</script>
 	<script type="text/javascript" src="/js/ipl.js"></script>

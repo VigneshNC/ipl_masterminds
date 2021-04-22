@@ -111,6 +111,11 @@ $(document).ready(function() {
 		} else {
 			$("#btnAddPlayer").hide();
 		}
+		$("#playersHead").text("List of Players");
+		$(".owner, #divImport").show();
+		$("#btnAddPlayer").show();
+		$("#spanTotPnts").text("").hide();
+		$("#btnBackPointsTable").hide();
 		$("#navItemPlayers").addClass('active');
 	} else if (window.location.pathname.includes("player")) {
 		/*rolesToUI = "";
@@ -125,6 +130,11 @@ $(document).ready(function() {
 		$("#navItemPointsTable").addClass('active');
 	} else if (window.location.pathname.includes("ipl/requestors")) {
 		$("#navItemRequestors").addClass('active');
+	} else if (window.location.pathname.includes("ipl/participantPoints")) {
+		$("#playersHead").text(window.location.pathname.split("/")[3].replaceAll("%20", " ") + " - Points");
+		$(".owner, #divImport, #btnAddPlayer").hide();
+		$("#btnBackPointsTable").show();
+		$("#spanTotPnts").text("Total Points: " + $("#totalPoints").val()).show();
 	}
 	
 	if (document.cookie.includes("userOrAdmin=admin")) {
@@ -420,5 +430,19 @@ $(document).ready(function() {
 	function validation() {
 		
 	}
+	
+	$("#tBodyParticipants tr").on("click", function() {
+		var columns = $(this).find("td");
+		window.location.href = "/ipl/participantPoints/" + columns[0].innerHTML;
+	});
+	
+	$("#btnBackPointsTable").on("click", function() {
+		window.location.href = "/ipl/pointsTable";
+	});
+	
+	$("#tBodyPlayers tr").on("click", function() {
+		var playerData = $(this).find("td");
+		window.location.href = "/ipl/player/edit/" + playerData[0].innerHTML;
+	});
 	
 });
