@@ -140,6 +140,9 @@ $(document).ready(function() {
 	} else if (window.location.pathname.includes("ipl/requestors")) {
 		$("#navItemRequestors").addClass('active');
 	} else if (window.location.pathname.includes("ipl/participantPoints")) {
+		$("#playerTable").DataTable();
+		$(".container").css("background-color", "#FFFFFF");
+		$("#btnDelAllPlayers").hide();
 		$("#playersHead").text(window.location.pathname.split("/")[3].replaceAll("%20", " ") + " - Points");
 		$(".owner, #divImport, #btnAddPlayer").hide();
 		$("#btnBackPointsTable").show();
