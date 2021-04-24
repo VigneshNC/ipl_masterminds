@@ -11,6 +11,8 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Ubuntu:regular,bold&subset=Latin">
 	<script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
 	<style>
 		#tableDiv {
 			overflow: scroll;
@@ -26,14 +28,17 @@
 		<hr />
 		<input type="hidden" id="totalPoints" value="${totalPoints}" />
 		<div class="row">
-			<div class="col-md-6">
+			<div class="col-md-2">
 				<!-- <button class="btn btn-primary" id="btnAddPlayer">Add Player</button> -->
 			</div>
 			<!-- <div id="divImport" class="col-md-6"> -->
-				<div id="divImport" class="col-md-6 row">
+				<div id="divImport" class="col-md-8 row">
 					<input type="file" name="file" class="form-control col-md-9" id="fileImportPlayers" />
 					<button class="btn btn-primary" id="btnImportPlayers">Import Players</button>
 				<!-- </div> -->
+			</div>
+			<div class="col-md-2">
+				<button class="btn btn-danger" id="btnDelAllPlayers">Delete All Players</button>
 			</div>
 		</div>
 		<span style="color:red;"><b>Note:</b> Click on any row to edit each player.</span>
@@ -43,7 +48,7 @@
 		</div>
 		<hr />
 		<div id="tableDiv">
-			<table class="table table-dark table-hover">
+			<table id="playerTable" class="display compact">
 				<thead>
 					<tr>
 						<th>S.No</th>
@@ -77,8 +82,8 @@
 				</thead>
 				<tbody id="tBodyPlayers">
 					<c:forEach items="${playersData}" var="playerData">
-						<tr>
-							<td>${playerData.id}</td>
+						<tr id="${playerData.id}">
+							<td>${playerData.playerId}</td>
 							<td>${playerData.playerName}</td>
 							<td>${playerData.role}</td>
 							<td>${playerData.nationality}</td>

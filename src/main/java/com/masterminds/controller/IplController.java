@@ -302,4 +302,20 @@ public class IplController {
 		return mv;
 	}
 	
+	@DeleteMapping("ipl/deleteAllPlayers")
+	public String deleteAllPlayers() {
+		try {
+			List<PlayerInfo> players = iplService.getAllPlayers(null);
+			if (players != null && players.size() > 0) {
+				for (PlayerInfo playerInfo : players) {
+					iplService.deletePlayerById(playerInfo.getId());
+				}
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+			return "failed";
+		}
+		return "success";
+	}
+	
 }

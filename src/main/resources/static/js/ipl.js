@@ -1,7 +1,8 @@
 $(document).ready(function() {
 	$("body").css("background-color", "#3D4D61").css("font-family", "Ubuntu, 'times new roman', times, roman, serif");
 	$(".container").addClass("rounded").css("background-color", "#F3CA20").css("padding-bottom", "15px");
-
+	$("#tBodyParticipants, #tBodyPlayers tr").css("cursor", "pointer");
+	
 	$("#btnSaveOrUpdateUser").on("click", function(e) {
 		var registerUserData = $("#registerForm").serializeObject();
 		$.ajax({
@@ -96,6 +97,7 @@ $(document).ready(function() {
 		$("#btnBackUser").show();
 	} else if (window.location.pathname.includes("ipl/login")) {
 		$("#h1user").html("Login Form");
+		$("#txtLoginUsername").focus();
 	} else if (window.location.pathname.includes("ipl/logout")) {
 		document.cookie = "userOrAdmin=; path=/";
 	} else if (window.location.pathname.includes("player/edit")) {
@@ -106,11 +108,18 @@ $(document).ready(function() {
 		$( 'select[name="inptProduct"]' ).append(rolesToUI);*/
 		$("#btnSaveOrUpdatePlayer").html("Update");
 	} else if (window.location.pathname.includes("ipl/playersList")) {
+		$("#playerTable").DataTable();
 		if (document.cookie.includes("userOrAdmin=admin")) {
 			$("#btnAddPlayer").show();
 		} else {
 			$("#btnAddPlayer").hide();
 		}
+		if (document.getElementById("tBodyPlayers").children[0].innerText == "No data available in table") {
+			$("#btnDelAllPlayers").hide();
+		} else {
+			$("#btnDelAllPlayers").show();
+		}
+		$(".container").css("background-color", "#FFFFFF");
 		$("#playersHead").text("List of Players");
 		$(".owner, #divImport").show();
 		$("#btnAddPlayer").show();
@@ -415,6 +424,10 @@ $(document).ready(function() {
 				Swal.fire({
 					icon: "success",
 					text: "Players are imported successfully!"
+				}).then((result) => {
+					if (result.isConfirmed) {
+						window.location.href = "/ipl/playersList";
+					}
 				});
 			},
 			error: function(err) {
@@ -441,8 +454,56 @@ $(document).ready(function() {
 	});
 	
 	$("#tBodyPlayers tr").on("click", function() {
-		var playerData = $(this).find("td");
-		window.location.href = "/ipl/player/edit/" + playerData[0].innerHTML;
+		window.location.href = "/ipl/player/edit/" + $(this).prop("id");
+	});
+	
+	$("#btnDelAllPlayers").on("click", function() {
+		Swal.fire({
+			icon: "question",
+			title: "Are you sure to delete all the players?",
+			showDenyButton: true,
+			confirmButtonText: "Delete",
+			denyButtonText: "Don't delete"
+		}).then((result) => {
+			if (result.isConfirmed) {
+				$.ajax({
+					type: "delete",
+					url: "/ipl/deleteAllPlayers/",
+					success: function(result) {
+						if (result == "success") {
+							Swal.fire({
+								icon: "success",
+								text: "All players are deleted!",
+								confirmButtonText: "Okay"
+							}).then((result) => {
+								if (result.isConfirmed) {
+									window.location.href = "/ipl/playersList";
+								}
+							});
+						} else {
+							Swal.fire({
+								icon: "error",
+								title: "Oops...",
+								text: "Something went wrong!"
+							});
+						}
+					},
+					error: function(error) {
+						console.log("Error: " + error);
+						Swal.fire({
+							icon: "error",
+							title: "Oops...",
+							text: "Something went wrong!"
+						});
+					}
+				});
+			} else if (result.isDenied) {
+				Swal.fire({
+					icon: "info",
+					text: "Not deleted!"
+				});
+			}
+		});
 	});
 	
 });
