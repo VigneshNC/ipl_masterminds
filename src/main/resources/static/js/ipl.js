@@ -1,7 +1,6 @@
 $(document).ready(function() {
 	$("body").css("background-color", "#3D4D61").css("font-family", "Ubuntu, 'times new roman', times, roman, serif");
 	$(".container").addClass("rounded").css("background-color", "#F3CA20").css("padding-bottom", "15px");
-	$("#tBodyParticipants, #tBodyPlayers tr").css("cursor", "pointer");
 	
 	$("#btnSaveOrUpdateUser").on("click", function(e) {
 		var registerUserData = $("#registerForm").serializeObject();
@@ -88,8 +87,9 @@ $(document).ready(function() {
 		$("#navItemUsers").show();
 	} else if (window.location.pathname.includes("user/view")) {
 		$("#navItemUsers").show();
-		let userOrAdmin = $("#userOrAdmin").val();
-		document.cookie = "userOrAdmin=" + userOrAdmin + "; path=/";
+		document.cookie = "userOrAdmin=" + $("#userOrAdmin").val() + "; path=/";
+		document.cookie = "userId=" + $("#userId").val() + "; path=/";
+		$("#navItemProfile").addClass('active');
 	} else if (window.location.pathname.includes("user/edit")) {
 		$("#h1user").html("Edit Participant");
 		$("#btnSaveOrUpdateUser").html("Update");
@@ -100,25 +100,16 @@ $(document).ready(function() {
 		$("#txtLoginUsername").focus();
 	} else if (window.location.pathname.includes("ipl/logout")) {
 		document.cookie = "userOrAdmin=; path=/";
+		document.cookie = "userId=; path=/";
 	} else if (window.location.pathname.includes("player/edit")) {
-		/*rolesToUI = "";
-		for(var roleIndex = 0; roleIndex < productArray.length; roleIndex++) {
-		    rolesToUI += "<option value='" + productArray[i] + "'>" + productArray[i] + "</option>";
-		}
-		$( 'select[name="inptProduct"]' ).append(rolesToUI);*/
 		$("#btnSaveOrUpdatePlayer").html("Update");
 	} else if (window.location.pathname.includes("ipl/playersList")) {
 		$("#playerTable").DataTable();
-		if (document.cookie.includes("userOrAdmin=admin")) {
-			$("#btnAddPlayer").show();
-		} else {
-			$("#btnAddPlayer").hide();
-		}
+		
 		if (document.getElementById("tBodyPlayers").children[0].innerText == "No data available in table") {
 			$("#btnDelAllPlayers").hide();
-		} else {
-			$("#btnDelAllPlayers").show();
 		}
+		
 		$(".container").css("background-color", "#FFFFFF");
 		$("#playersHead").text("List of Players");
 		$(".owner, #divImport").show();
@@ -152,16 +143,16 @@ $(document).ready(function() {
 	}
 	
 	if (document.cookie.includes("userOrAdmin=admin")) {
-		$("#navItemLogout, #navItemUsers, #navItemPlayers, #navItemRequestors").show();
+		$("#navItemLogout, #navItemUsers, #navItemPlayers, #navItemRequestors, #navItemPointsTable, #divImport, #btnDelAllPlayers, .spanEditPlayer, #line, .hideField").show();
 		$("#navItemLogin, #navItemRegister").hide();
+		$("#tBodyParticipants, #tBodyPlayers tr").css("cursor", "pointer");
 	} else if (document.cookie.includes("userOrAdmin=user")) {
-		$("#navItemLogout").show();
-		$("#navItemLogin, #navItemRegister, #navItemUsers, #navItemPlayers, #navItemRequestors").hide();
+		$("#navItemLogout, #navItemRules, #navItemUsers, #navItemPlayers, #navItemPointsTable").show();
+		$("#navItemLogin, #navItemRegister, #navItemRequestors, #divImport, #btnDelAllPlayers, .spanEditPlayer, #line, .hideField").hide();
 	} else {
 		$("#navItemLogin").show();
-		$("#navItemLogout, #navItemUsers, #navItemPlayers, #navItemRules, #navItemRequestors").hide();
+		$("#navItemLogout, #navItemUsers, #navItemPlayers, #navItemRequestors, #navItemPointsTable, .spanEditPlayer, #line, .hideField, #navItemProfile").hide();
 	}
-	
 	
 	$("#tBodyUsers tr").on("click", function() {
 		/*var columns = $(this).closest('tr').find("td");
@@ -444,14 +435,11 @@ $(document).ready(function() {
 		});
 	});
 	
-	// validation to be implemented
-	function validation() {
-		
-	}
-	
 	$("#tBodyParticipants tr").on("click", function() {
-		var columns = $(this).find("td");
-		window.location.href = "/ipl/participantPoints/" + columns[0].innerHTML;
+		if (document.cookie.includes("userOrAdmin=admin")) {
+			var columns = $(this).find("td");
+			window.location.href = "/ipl/participantPoints/" + columns[0].innerHTML;
+		}
 	});
 	
 	$("#btnBackPointsTable").on("click", function() {
@@ -459,7 +447,9 @@ $(document).ready(function() {
 	});
 	
 	$("#tBodyPlayers tr").on("click", function() {
-		window.location.href = "/ipl/player/edit/" + $(this).prop("id");
+		if (document.cookie.includes("userOrAdmin=admin")) {
+			window.location.href = "/ipl/player/edit/" + $(this).prop("id");
+		}
 	});
 	
 	$("#btnDelAllPlayers").on("click", function() {
@@ -510,5 +500,22 @@ $(document).ready(function() {
 			}
 		});
 	});
+	
+	$("#navItemProfile").on("click", function() {
+		if (document.cookie.includes("userId=")) {
+			let cookie = document.cookie.split(";");
+			for(var cookieIndex = 0; cookieIndex < cookie.length; cookieIndex++) {
+				if (cookie[cookieIndex].includes("userId")) {
+					let userId = cookie[cookieIndex].split("=")[1];
+					window.location.href = "/ipl/user/view/" + userId;
+				}
+			}
+		}
+	});
+	
+	// validation to be implemented
+	function validation() {
+		
+	}
 	
 });

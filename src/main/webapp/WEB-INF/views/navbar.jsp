@@ -3,10 +3,14 @@
 	<button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
 		<span class="navbar-toggler-icon"></span>
 	</button>
+	<input type="hidden" id="participantId" value="${participantId}" />
 	<div class="collapse navbar-collapse" id="navbarCollapse">
 		<ul class="navbar-nav ml-auto topnav">
 			<li id="navItemRegister" class="nav-item">
 				<a class="nav-link" href="/ipl/register">Register</a>
+			</li>
+			<li id="navItemProfile" class="nav-item">
+				<a class="nav-link" href="#">My Profile</a>
 			</li>
 			<li id="navItemPlayers" class="nav-item">
 				<a class="nav-link" href="/ipl/playersList">Players</a>

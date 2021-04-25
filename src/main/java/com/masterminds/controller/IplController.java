@@ -100,6 +100,7 @@ public class IplController {
 				userOrAdmin = "admin";
 			}
 			userView.addObject("userOrAdmin", userOrAdmin);
+			userView.addObject("participantId", userInfo.getId());
 		}
 		return userView;
 	}

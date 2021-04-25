@@ -42,13 +42,13 @@
 				<button class="btn btn-danger" id="btnDelAllPlayers">Delete All Players</button>
 			</div>
 		</div>
-		<span style="color:red;"><b>Note:</b> Click on any row to edit each player.</span>
+		<span class="spanEditPlayer" style="color:red;"><b>Note:</b> Click on any row to edit each player.</span>
 		<div class="row">
 			<h2 class="col-md-5" id="h2TotalPoints"></h2>
 			<h2 class="col-md-5" id="h2TotalPlayers"></h2>
 			<button class="btn btn-primary" id="btnBackPointsTable">Back</button>
 		</div>
-		<hr />
+		<hr id="line" />
 		<div id="tableDiv">
 			<table id="playerTable" class="display compact">
 				<thead>

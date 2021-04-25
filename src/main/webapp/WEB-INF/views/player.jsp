@@ -18,7 +18,7 @@
 		<hr />
 		<form id="playerForm">
 			<div class="form-group">
-				<input type="hidden" id="hTxtId" name="id" value="${playerData.id}" class="form-control font-weight-bold" />
+				<input type="hidden" id="hdnPlayerId" name="id" value="${playerData.id}" class="form-control font-weight-bold" />
 				<label class="font-weight-bold" for="txtPlayerName">Player Name</label>
 				<input type="text" id="txtPlayerName" name="playerName" value="${playerData.playerName}" class="form-control font-weight-bold" placeholder="Enter player name" />
 			</div>

@@ -19,7 +19,7 @@
 		<hr />
 		<form id="registerForm" class="needs-validation">
 			<div class="form-group">
-				<input type="hidden" id="hTxtId" name="id" value="${userData.id}" class="form-control font-weight-bold" />
+				<input type="hidden" id="hdnUserId" name="id" value="${userData.id}" class="form-control font-weight-bold" />
 				<label class="font-weight-bold" for="txtFirstName">First Name</label>
 				<input type="text" id="txtFirstName" name="firstName" value="${userData.firstName}" class="form-control font-weight-bold" placeholder="Enter your first name" required />
 				<div class="invalid-feedback">

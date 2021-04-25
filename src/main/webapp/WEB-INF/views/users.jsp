@@ -21,21 +21,21 @@
 		<table class="table table-hover table-dark" id="tableUser">
 			<thead>
 				<tr>
-					<th>First Name</th>
-					<th>Last Name</th>
+					<th class="hideField">First Name</th>
+					<th class="hideField">Last Name</th>
 					<th>Username</th>
 					<th>Team Name</th>
-					<th>Action</th>
+					<th class="hideField">Action</th>
 				</tr>
 			</thead>
 			<tbody id="tBodyUsers">
 				<c:forEach items="${usersData}" var="user">
 					<tr>
-						<td>${user.firstName}</td>
-						<td>${user.lastName}</td>
+						<td class="hideField">${user.firstName}</td>
+						<td class="hideField">${user.lastName}</td>
 						<td>${user.username}</td>
 						<td>${user.teamName}</td>
-						<td>
+						<td class="hideField">
 							<button id="${user.id}" class="btn btn-danger delete">Delete</button>
 							<button id="${user.id}" class="btn btn-danger reject">Reject</button>
 						</td>
