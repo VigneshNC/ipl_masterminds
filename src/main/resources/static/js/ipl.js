@@ -123,7 +123,8 @@ $(document).ready(function() {
 		$("#playersHead").text("List of Players");
 		$(".owner, #divImport").show();
 		$("#btnAddPlayer").show();
-		$("#spanTotPnts").text("").hide();
+		$("#h2TotalPoints").text("").hide();
+		$("#h2TotalPlayers").text("").hide();
 		$("#btnBackPointsTable").hide();
 		$("#navItemPlayers").addClass('active');
 	} else if (window.location.pathname.includes("player")) {
@@ -146,7 +147,8 @@ $(document).ready(function() {
 		$("#playersHead").text(window.location.pathname.split("/")[3].replaceAll("%20", " ") + " - Points");
 		$(".owner, #divImport, #btnAddPlayer").hide();
 		$("#btnBackPointsTable").show();
-		$("#spanTotPnts").text("Total Points: " + $("#totalPoints").val()).show();
+		$("#h2TotalPoints").text("Total Points: " + $("#totalPoints").val()).show();
+		$("#h2TotalPlayers").text("Total Players: " + $("#totalPlayers").val()).show();
 	}
 	
 	if (document.cookie.includes("userOrAdmin=admin")) {

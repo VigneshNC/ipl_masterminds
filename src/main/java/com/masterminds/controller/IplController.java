@@ -298,6 +298,7 @@ public class IplController {
 				points += playerInfo.getPoints();
 			}
 			mv.addObject("totalPoints", points);
+			mv.addObject("totalPlayers", players.size());
 		}
 		return mv;
 	}

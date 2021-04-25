@@ -27,23 +27,25 @@
 		<h1 id="playersHead"></h1>
 		<hr />
 		<input type="hidden" id="totalPoints" value="${totalPoints}" />
+		<input type="hidden" id="totalPlayers" value="${totalPlayers}" />
 		<div class="row">
 			<div class="col-md-2">
 				<!-- <button class="btn btn-primary" id="btnAddPlayer">Add Player</button> -->
 			</div>
 			<!-- <div id="divImport" class="col-md-6"> -->
-				<div id="divImport" class="col-md-8 row">
-					<input type="file" name="file" class="form-control col-md-9" id="fileImportPlayers" />
+				<div id="divImport" class="col-md-6 row">
+					<input type="file" name="file" class="form-control col-md-6" id="fileImportPlayers" />
 					<button class="btn btn-primary" id="btnImportPlayers">Import Players</button>
 				<!-- </div> -->
 			</div>
-			<div class="col-md-2">
+			<div class="col-md-4">
 				<button class="btn btn-danger" id="btnDelAllPlayers">Delete All Players</button>
 			</div>
 		</div>
 		<span style="color:red;"><b>Note:</b> Click on any row to edit each player.</span>
 		<div class="row">
-			<h2 class="col-md-11" id="spanTotPnts"></h2>
+			<h2 class="col-md-5" id="h2TotalPoints"></h2>
+			<h2 class="col-md-5" id="h2TotalPlayers"></h2>
 			<button class="btn btn-primary" id="btnBackPointsTable">Back</button>
 		</div>
 		<hr />
@@ -57,7 +59,7 @@
 						<th>Nationality</th>
 						<th>IPL Team</th>
 						<th class="owner">Owner</th>
-						<!-- <th>Bid</th> -->
+						<th>Bid</th>
 						<th>Total Points</th>
 						<th>Match 1</th>
 						<th>Match 2</th>
@@ -89,7 +91,7 @@
 							<td>${playerData.nationality}</td>
 							<td>${playerData.iplTeam}</td>
 							<td class="owner">${playerData.owner}</td>
-							<%-- <td>${playerData.bid}</td> --%>
+							<td>${playerData.bid}</td>
 							<td>${playerData.points}</td>
 							<td>${playerData.match1}</td>
 							<td>${playerData.match2}</td>

@@ -39,7 +39,7 @@ public class PlayerInfo {
 	private String owner;
 	
 	@Column(name = "bid")
-	private String bid;
+	private Double bid;
 	
 	@Column(name = "points")
 	private Long points;
@@ -160,11 +160,11 @@ public class PlayerInfo {
 		this.owner = owner;
 	}
 
-	public String getBid() {
+	public Double getBid() {
 		return bid;
 	}
 
-	public void setBid(String bid) {
+	public void setBid(Double bid) {
 		this.bid = bid;
 	}
 

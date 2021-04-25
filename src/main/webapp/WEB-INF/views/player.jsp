@@ -53,6 +53,10 @@
 				<input type="text" id="bid" name="bid" value="${playerData.bid}" class="form-control font-weight-bold" placeholder="Enter bid as yes or no" />
 			</div> --%>
 			<div class="form-group">
+				<label class="font-weight-bold" for="bid">Price</label>
+				<input type="number" id="bid" name="bid" value="${playerData.bid} Cr." class="form-control font-weight-bold" placeholder="Enter price in crores" />
+			</div>
+			<div class="form-group">
 				<label class="font-weight-bold" for="points">Total Points</label>
 				<input type="number" id="points" name="points" value="${playerData.points}" class="form-control font-weight-bold" placeholder="Enter points" />
 			</div>

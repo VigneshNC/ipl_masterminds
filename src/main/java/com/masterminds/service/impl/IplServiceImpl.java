@@ -1,6 +1,7 @@
 package com.masterminds.service.impl;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -135,80 +136,84 @@ public class IplServiceImpl implements IplService {
 					case 5:
 						player.setOwner(currentCell.getStringCellValue());
 						break;
-
+						
 					case 6:
-						player.setPoints((long) currentCell.getNumericCellValue());
+						player.setBid(currentCell.getNumericCellValue());
 						break;
 
 					case 7:
-						player.setMatch1((long) currentCell.getNumericCellValue());
+						player.setPoints((long) currentCell.getNumericCellValue());
 						break;
 
 					case 8:
-						player.setMatch2((long) currentCell.getNumericCellValue());
+						player.setMatch1((long) currentCell.getNumericCellValue());
 						break;
 
 					case 9:
-						player.setMatch3((long) currentCell.getNumericCellValue());
+						player.setMatch2((long) currentCell.getNumericCellValue());
 						break;
 
 					case 10:
-						player.setMatch4((long) currentCell.getNumericCellValue());
+						player.setMatch3((long) currentCell.getNumericCellValue());
 						break;
 
 					case 11:
-						player.setMatch5((long) currentCell.getNumericCellValue());
+						player.setMatch4((long) currentCell.getNumericCellValue());
 						break;
 
 					case 12:
-						player.setMatch6((long) currentCell.getNumericCellValue());
+						player.setMatch5((long) currentCell.getNumericCellValue());
 						break;
 
 					case 13:
-						player.setMatch7((long) currentCell.getNumericCellValue());
+						player.setMatch6((long) currentCell.getNumericCellValue());
 						break;
 
 					case 14:
-						player.setMatch8((long) currentCell.getNumericCellValue());
+						player.setMatch7((long) currentCell.getNumericCellValue());
 						break;
 
 					case 15:
-						player.setMatch9((long) currentCell.getNumericCellValue());
+						player.setMatch8((long) currentCell.getNumericCellValue());
 						break;
 
 					case 16:
-						player.setMatch10((long) currentCell.getNumericCellValue());
+						player.setMatch9((long) currentCell.getNumericCellValue());
 						break;
 
 					case 17:
-						player.setMatch11((long) currentCell.getNumericCellValue());
+						player.setMatch10((long) currentCell.getNumericCellValue());
 						break;
 
 					case 18:
-						player.setMatch12((long) currentCell.getNumericCellValue());
+						player.setMatch11((long) currentCell.getNumericCellValue());
 						break;
 
 					case 19:
-						player.setMatch13((long) currentCell.getNumericCellValue());
+						player.setMatch12((long) currentCell.getNumericCellValue());
 						break;
 
 					case 20:
-						player.setMatch14((long) currentCell.getNumericCellValue());
+						player.setMatch13((long) currentCell.getNumericCellValue());
 						break;
 
 					case 21:
-						player.setMatch15((long) currentCell.getNumericCellValue());
+						player.setMatch14((long) currentCell.getNumericCellValue());
 						break;
 
 					case 22:
-						player.setMatch16((long) currentCell.getNumericCellValue());
+						player.setMatch15((long) currentCell.getNumericCellValue());
 						break;
 
 					case 23:
-						player.setMatch17((long) currentCell.getNumericCellValue());
+						player.setMatch16((long) currentCell.getNumericCellValue());
 						break;
 
 					case 24:
+						player.setMatch17((long) currentCell.getNumericCellValue());
+						break;
+
+					case 25:
 						player.setMatch18((long) currentCell.getNumericCellValue());
 						break;
 
