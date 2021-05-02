@@ -12,6 +12,9 @@
 			<li id="navItemProfile" class="nav-item">
 				<a class="nav-link" href="#">My Profile</a>
 			</li>
+			<li id="navItemBid" class="nav-item">
+				<a class="nav-link" href="/ipl/bid">Bid</a>
+			</li>
 			<li id="navItemPlayers" class="nav-item">
 				<a class="nav-link" href="/ipl/playersList">Players</a>
 			</li>

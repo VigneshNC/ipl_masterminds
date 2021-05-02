@@ -43,6 +43,9 @@ public class UserInfo {
 	
 	@Column(name = "modified_date")
 	private Date modifiedDate;
+	
+	@Column(name = "online")
+	private Boolean online;
 
 	public Long getId() {
 		return id;
@@ -115,4 +118,13 @@ public class UserInfo {
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
 	}
+
+	public Boolean getOnline() {
+		return online;
+	}
+
+	public void setOnline(Boolean online) {
+		this.online = online;
+	}
+
 }

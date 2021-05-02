@@ -87,11 +87,11 @@ public class IplDAOImpl implements IplDAO {
 	}
 
 	@Override
-	public List<PlayerInfo> getAllPlayers(String participantName) {
+	public List<PlayerInfo> getAllPlayers(String colName, String value) {
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(PlayerInfo.class);
-		if (participantName != null && !participantName.isEmpty()) {
-			criteria.add(Restrictions.eq("owner", participantName));
+		if (colName != null && !colName.isEmpty() && value != null && !value.isEmpty()) {
+			criteria.add(Restrictions.eq(colName, value));
 		}
 		List<PlayerInfo> playerList = criteria.list();
 		return playerList;
@@ -132,7 +132,16 @@ public class IplDAOImpl implements IplDAO {
 			userInfo.setModifiedDate(new Date());
 			session.update(userInfo);
 			session.flush();
-		}		
+		}
+	}
+
+	@Override
+	public List<UserInfo> getAllOnlineUsers() {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(UserInfo.class);
+		criteria.add(Restrictions.eq("online", true));
+		List<UserInfo> userList = criteria.list();
+		return null;
 	}
 
 }

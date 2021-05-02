@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.masterminds.entity.BidParticipantInfo;
 import com.masterminds.entity.PlayerInfo;
 import com.masterminds.entity.PointsTable;
 import com.masterminds.entity.UserInfo;
@@ -166,7 +168,7 @@ public class IplController {
 	@GetMapping("ipl/playersList")
 	public ModelAndView getPlayers() throws JsonProcessingException {
 		ModelAndView playersView = new ModelAndView("players");
-		List<PlayerInfo> playersInfo = iplService.getAllPlayers(null);
+		List<PlayerInfo> playersInfo = iplService.getAllPlayers(null, null);
 		System.out.println("Players: " + mapper.writeValueAsString(playersInfo));
 		playersView.addObject("playersData", playersInfo);
 		return playersView;
@@ -280,7 +282,7 @@ public class IplController {
 	@GetMapping("ipl/pointsTable")
 	public ModelAndView getParticipants() throws JsonProcessingException {
 		ModelAndView mv = new ModelAndView("points_table");
-		List<PlayerInfo> players = iplService.getAllPlayers(null);
+		List<PlayerInfo> players = iplService.getAllPlayers(null, null);
 		if (players != null && players.size() > 0) {
 			List<PointsTable> pointsTable = iplService.getAllParticipants(players);
 			mv.addObject("pointsTable", pointsTable);
@@ -291,7 +293,7 @@ public class IplController {
 	@GetMapping("ipl/participantPoints/{participantName}")
 	public ModelAndView showParticipantPoints(@PathVariable String participantName) {
 		ModelAndView mv = new ModelAndView("players");
-		List<PlayerInfo> players = iplService.getAllPlayers(participantName);
+		List<PlayerInfo> players = iplService.getAllPlayers("owner", participantName);
 		if (players != null && players.size() > 0) {
 			mv.addObject("playersData", players);
 			Long points = 0L;
@@ -307,7 +309,7 @@ public class IplController {
 	@DeleteMapping("ipl/deleteAllPlayers")
 	public String deleteAllPlayers() {
 		try {
-			List<PlayerInfo> players = iplService.getAllPlayers(null);
+			List<PlayerInfo> players = iplService.getAllPlayers(null, null);
 			if (players != null && players.size() > 0) {
 				for (PlayerInfo playerInfo : players) {
 					iplService.deletePlayerById(playerInfo.getId());
@@ -318,6 +320,61 @@ public class IplController {
 			return "failed";
 		}
 		return "success";
+	}
+	
+	@GetMapping("ipl/bid")
+	public ModelAndView bid() throws JsonProcessingException {
+		ModelAndView mv = new ModelAndView("bid");
+		List<UserInfo> usersInfo = iplService.getAll();
+		List<BidParticipantInfo> onlineUsers = new ArrayList<>();
+		List<BidParticipantInfo> offlineUsers = new ArrayList<>();
+		if (usersInfo != null && usersInfo.size() > 0) {
+			double remainingPrice = 0d;
+			BidParticipantInfo onlineUser = null;
+			BidParticipantInfo offlineUser = null;
+			for (UserInfo userInfo : usersInfo) {
+				if ("participant".equals(userInfo.getRole())) {
+					List<PlayerInfo> players = iplService.getAllPlayers("owner", userInfo.getUsername());
+					if (userInfo.getOnline() != null && userInfo.getOnline()) {
+						onlineUser = new BidParticipantInfo();
+						onlineUser.setUserId(userInfo.getId());
+						onlineUser.setUsername(userInfo.getUsername());
+						
+						remainingPrice = 0d;
+						if (players != null && players.size() > 0) {
+							for (PlayerInfo playerInfo : players) {
+								remainingPrice += playerInfo.getBid();
+							}
+						}
+						onlineUser.setTotalPlayers(players.size());
+						onlineUser.setRemainingPrice(String.format("%.2f", (120 - remainingPrice) < 0 ? 0 : (120 - remainingPrice)));
+						onlineUsers.add(onlineUser);
+					} else {
+						offlineUser = new BidParticipantInfo();
+						offlineUser.setUserId(userInfo.getId());
+						offlineUser.setUsername(userInfo.getUsername());
+						remainingPrice = 0d;
+						if (players != null && players.size() > 0) {
+							for (PlayerInfo playerInfo : players) {
+								remainingPrice += playerInfo.getBid();
+							}
+						}
+						offlineUser.setTotalPlayers(players.size());
+						offlineUser.setRemainingPrice(String.format("%.2f", (120 - remainingPrice) < 0 ? 0 : (120 - remainingPrice)));
+						offlineUsers.add(offlineUser);
+					}
+				}
+			}
+		}
+		mv.addObject("onlineUsers", onlineUsers);
+		mv.addObject("offlineUsers", offlineUsers);
+		
+		List<PlayerInfo> players = iplService.getAllPlayers("owner", "Unsold");
+		System.out.println("players: " + mapper.writeValueAsString(players));
+		int randomNum = ThreadLocalRandom.current().nextInt(1, players.size());
+		System.out.println("randomNum: " + randomNum);
+		mv.addObject("bidPlayer", players.get(randomNum));
+		return mv;
 	}
 	
 }

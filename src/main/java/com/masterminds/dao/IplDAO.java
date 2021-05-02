@@ -19,7 +19,7 @@ public interface IplDAO {
 
 	public void saveOrUpdate(PlayerInfo playerInfo);
 
-	public List<PlayerInfo> getAllPlayers(String participantName);
+	public List<PlayerInfo> getAllPlayers(String colName, String value);
 
 	public PlayerInfo getPlayerById(Long id);
 
@@ -28,5 +28,7 @@ public interface IplDAO {
 	public void approveUserById(Long id);
 
 	public void rejectUserById(Long id);
+
+	public List<UserInfo> getAllOnlineUsers();
 
 }

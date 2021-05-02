@@ -140,6 +140,8 @@ $(document).ready(function() {
 		$("#btnBackPointsTable").show();
 		$("#h2TotalPoints").text("Total Points: " + $("#totalPoints").val()).show();
 		$("#h2TotalPlayers").text("Total Players: " + $("#totalPlayers").val()).show();
+	} else if (window.location.pathname.includes("ipl/bid")) {
+		$("#navItemBid").addClass('active');
 	}
 	
 	if (document.cookie.includes("userOrAdmin=admin")) {

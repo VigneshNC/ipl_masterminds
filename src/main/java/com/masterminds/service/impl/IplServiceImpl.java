@@ -66,8 +66,8 @@ public class IplServiceImpl implements IplService {
 	}
 
 	@Override
-	public List<PlayerInfo> getAllPlayers(String participantName) {
-		return iplDAO.getAllPlayers(participantName);
+	public List<PlayerInfo> getAllPlayers(String colName, String value) {
+		return iplDAO.getAllPlayers(colName, value);
 	}
 
 	@Override
@@ -265,6 +265,11 @@ public class IplServiceImpl implements IplService {
 		}
 		Collections.sort(pointsTable);
 		return pointsTable;
+	}
+
+	@Override
+	public List<UserInfo> getAllOnlineUsers() {
+		return iplDAO.getAllOnlineUsers();
 	}
 	
 }
