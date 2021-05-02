@@ -20,7 +20,7 @@ public class PointsTable implements Comparable<PointsTable> {
 	
 	@Override
 	public int compareTo(PointsTable o) {
-		return this.getParticipant().compareTo(o.getParticipant());
+		return o.getPoints().compareTo(this.getPoints());
 	}
 	
 }
