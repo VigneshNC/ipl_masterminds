@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-md bg-dark navbar-dark">
-	<a class="navbar-brand" href="/ipl"><img src="/img/marijn-smidt-masterminds-emblem-2017-12.jpg" height="60" width="y"/></a>
+	<a class="navbar-brand" href="/ipl"><img src="/img/marijn-smidt-masterminds-emblem-2017-12.jpg" height="40" width="40"/></a>
 	<button class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
 		<span class="navbar-toggler-icon"></span>
 	</button>

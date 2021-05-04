@@ -515,6 +515,43 @@ $(document).ready(function() {
 		}
 	});
 	
+	if ($("#bidPrice").text().substring(0, $("#bidPrice").text().length-1) < 100) {
+		$("#btnIncrease5L").show();
+		$("#btnIncrease20L").hide();
+	} else {
+		$("#btnIncrease5L").hide();
+		$("#btnIncrease20L").show();
+	}
+	
+	$("#btnIncrease5L").on("click", function() {
+		var bidPrice = $("#bidPrice").text();
+		if (bidPrice.includes("L")) {
+			bidPrice = bidPrice.substring(0, bidPrice.length-1);
+			bidPrice = Number(bidPrice) + 5;
+			if (bidPrice < 100) {
+				$("#bidPrice").text(bidPrice + "L");
+			} else {
+				$("#btnIncrease5L").hide();
+				$("#btnIncrease20L").show();
+				bidPrice = bidPrice/100;
+				$("#bidPrice").text(bidPrice + "C");
+			}
+		}
+	});
+	
+	$("#btnIncrease20L").on("click", function() {
+		var bidPrice = $("#bidPrice").text();
+		if (bidPrice.includes("C")) {
+			bidPrice = bidPrice.substring(0, bidPrice.length-1);
+			bidPrice = Number(bidPrice) + 0.20;
+			$("#bidPrice").text(bidPrice + "C");
+		}
+	});
+	
+	$("#btnNoBid").on("click", function() {
+		$("#btnIncrease5L, #btnDecrease5L, #btnIncrease20L, #btnDecrease20L").hide();
+	});
+	
 	// validation to be implemented
 	function validation() {
 		
