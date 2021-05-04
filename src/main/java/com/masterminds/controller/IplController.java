@@ -39,6 +39,9 @@ public class IplController {
 
 	@GetMapping({ "/", "/ipl" })
 	public ModelAndView origin(HttpServletRequest request) {
+		if (request.getSession(false) == null) {
+			request.getSession(true);
+		}
 		Object userIdObj = request.getSession(false).getAttribute("userId");
 		if (userIdObj != null) {
 			Long userId = (Long) userIdObj;
