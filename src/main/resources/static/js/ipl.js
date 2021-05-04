@@ -90,6 +90,7 @@ $(document).ready(function() {
 		document.cookie = "userOrAdmin=" + $("#userOrAdmin").val() + "; path=/";
 		document.cookie = "userId=" + $("#userId").val() + "; path=/";
 		$("#navItemProfile").addClass('active');
+		$("#participantId").val($("#userId").val());
 	} else if (window.location.pathname.includes("user/edit")) {
 		$("#h1user").html("Edit Participant");
 		$("#btnSaveOrUpdateUser").html("Update");
@@ -153,7 +154,7 @@ $(document).ready(function() {
 		$("#navItemLogin, #navItemRegister, #navItemRequestors, #divImport, #btnDelAllPlayers, .spanEditPlayer, #line, .hideField").hide();
 	} else {
 		$("#navItemLogin").show();
-		$("#navItemLogout, #navItemUsers, #navItemPlayers, #navItemRequestors, #navItemPointsTable, .spanEditPlayer, #line, .hideField, #navItemProfile").hide();
+		$("#navItemLogout, #navItemUsers, #navItemPlayers, #navItemRequestors, #navItemPointsTable, .spanEditPlayer, #line, .hideField, #navItemProfile, #navItemBid").hide();
 	}
 	
 	$("#tBodyUsers tr").on("click", function() {
@@ -515,12 +516,17 @@ $(document).ready(function() {
 		}
 	});
 	
-	if ($("#bidPrice").text().substring(0, $("#bidPrice").text().length-1) < 100) {
-		$("#btnIncrease5L").show();
-		$("#btnIncrease20L").hide();
+	if ($("#online").val() == "true") {
+		$("#btnIncrease5L, #btnIncrease20L, #btnNoBid").show();
+		if ($("#bidPrice").text().substring(0, $("#bidPrice").text().length-1) < 100) {
+			$("#btnIncrease5L").show();
+			$("#btnIncrease20L").hide();
+		} else {
+			$("#btnIncrease5L").hide();
+			$("#btnIncrease20L").show();
+		}
 	} else {
-		$("#btnIncrease5L").hide();
-		$("#btnIncrease20L").show();
+		$("#btnIncrease5L, #btnIncrease20L, #btnNoBid").hide();
 	}
 	
 	$("#btnIncrease5L").on("click", function() {
@@ -551,6 +557,15 @@ $(document).ready(function() {
 	$("#btnNoBid").on("click", function() {
 		$("#btnIncrease5L, #btnDecrease5L, #btnIncrease20L, #btnDecrease20L").hide();
 	});
+	
+	let totalBidUsers = $("#totalBidUsers").val();
+	if (totalBidUsers < 2) {
+		$("#noParticipantsDiv").show();
+		$("#participantsDiv").hide();
+	} else {
+		$("#noParticipantsDiv").hide();
+		$("#participantsDiv").show();
+	}
 	
 	// validation to be implemented
 	function validation() {

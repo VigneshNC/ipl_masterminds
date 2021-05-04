@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,37 +30,52 @@ import com.masterminds.entity.UserInfo;
 import com.masterminds.service.IplService;
 
 @RestController
-//@RequestMapping("ipl")
 public class IplController {
-	
+
 	@Autowired
 	IplService iplService;
 
 	ObjectMapper mapper = new ObjectMapper();
-	
-	@GetMapping({"/", "/ipl"})
-	public ModelAndView origin() {
+
+	@GetMapping({ "/", "/ipl" })
+	public ModelAndView origin(HttpServletRequest request) {
+		Object userIdObj = request.getSession(false).getAttribute("userId");
+		if (userIdObj != null) {
+			Long userId = (Long) userIdObj;
+			UserInfo userInfo = iplService.getById(userId);
+			userInfo.setOnline(false);
+			iplService.saveOrUpdate(userInfo);
+			request.getSession(false).setAttribute("userId", null);
+		}
 		return new ModelAndView("ipl_home");
 	}
-	
+
 //	@GetMapping("/ipl")
 //	public ModelAndView home() {
 //		return new ModelAndView("ipl_home");
 //	}
-	
+
 	@GetMapping("ipl/logout")
-	public ModelAndView logout() {
+	public ModelAndView logout(HttpServletRequest request) {
+		Object userIdObj = request.getSession(false).getAttribute("userId");
+		if (userIdObj != null) {
+			Long userId = (Long) userIdObj;
+			UserInfo userInfo = iplService.getById(userId);
+			userInfo.setOnline(false);
+			iplService.saveOrUpdate(userInfo);
+			request.getSession(false).setAttribute("userId", null);
+		}
 		return new ModelAndView("ipl_home");
 	}
-	
+
 	@GetMapping("ipl/register")
 	public ModelAndView register() {
 		return new ModelAndView("user");
 	}
-	
+
 	@PostMapping("ipl/save")
-	public Map<String, String> saveUserInfo(@RequestBody String userInfoStr) throws JsonMappingException, JsonProcessingException {
-		System.out.println("userInfoStr: " + userInfoStr);
+	public Map<String, String> saveUserInfo(@RequestBody String userInfoStr)
+			throws JsonMappingException, JsonProcessingException {
 		Map<String, String> resultMap = new HashMap<>();
 		UserInfo userInfo = mapper.readValue(userInfoStr, UserInfo.class);
 		if (userInfo != null) {
@@ -69,16 +86,16 @@ public class IplController {
 						resultMap.put("status", "duplicate");
 						resultMap.put("reason", "username");
 						return resultMap;
-					} else if (user.getTeamName() != null && user.getTeamName().equalsIgnoreCase(userInfo.getTeamName())) {
+					} else if (user.getTeamName() != null
+							&& user.getTeamName().equalsIgnoreCase(userInfo.getTeamName())) {
 						resultMap.put("status", "duplicate");
 						resultMap.put("reason", "teamname");
 						return resultMap;
 					}
 				}
 			}
-			
+
 			userInfo.setRole("requestor");
-			System.out.println("UserInfo: " + mapper.writeValueAsString(userInfo));
 			try {
 				iplService.saveOrUpdate(userInfo);
 			} catch (Exception e) {
@@ -90,9 +107,9 @@ public class IplController {
 		}
 		return resultMap;
 	}
-	
+
 	@GetMapping("ipl/user/view/{id}")
-	public ModelAndView getUserById(@PathVariable Long id) {
+	public ModelAndView getUserById(@PathVariable Long id, HttpServletRequest request) {
 		ModelAndView userView = new ModelAndView("profile");
 		UserInfo userInfo = iplService.getById(id);
 		if (userInfo != null) {
@@ -102,11 +119,11 @@ public class IplController {
 				userOrAdmin = "admin";
 			}
 			userView.addObject("userOrAdmin", userOrAdmin);
-			userView.addObject("participantId", userInfo.getId());
+			request.getSession(false).setAttribute("userId", userInfo.getId());
 		}
 		return userView;
 	}
-	
+
 	@GetMapping("ipl/user/edit/{id}")
 	public ModelAndView editUserById(@PathVariable Long id) {
 		ModelAndView userView = new ModelAndView("user");
@@ -114,7 +131,7 @@ public class IplController {
 		userView.addObject("userData", userInfo);
 		return userView;
 	}
-	
+
 	@GetMapping("ipl/users")
 	public ModelAndView getAllUsers() throws JsonProcessingException {
 		ModelAndView usersView = new ModelAndView("users");
@@ -127,32 +144,31 @@ public class IplController {
 				}
 			}
 		}
-		System.out.println("Users: " + mapper.writeValueAsString(authenticatedUsers));
 		usersView.addObject("usersData", authenticatedUsers);
 		return usersView;
 	}
-	
+
 	@DeleteMapping("ipl/delete/{id}")
 	public String deleteByUserId(@PathVariable Long id) {
 		try {
 			iplService.deleteById(id);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return "failed";
 		}
 		return "success";
 	}
-	
+
 	@GetMapping("ipl/rules")
-	public ModelAndView getRules() {
+	public ModelAndView getRules(HttpServletRequest request) {
 		return new ModelAndView("rules");
 	}
-	
+
 	@GetMapping("ipl/login")
 	public ModelAndView login() {
 		return new ModelAndView("login");
 	}
-	
+
 	@GetMapping("ipl/authenticate")
 	public Long authenticate(@RequestParam String username, @RequestParam String password) {
 		UserInfo user = iplService.getByUsernameAndPassword(username, password);
@@ -160,6 +176,8 @@ public class IplController {
 			if ("requestor".equals(user.getRole())) {
 				return 1L;
 			}
+			user.setOnline(true);
+			iplService.saveOrUpdate(user);
 			return user.getId();
 		}
 		return 0L;
@@ -169,11 +187,10 @@ public class IplController {
 	public ModelAndView getPlayers() throws JsonProcessingException {
 		ModelAndView playersView = new ModelAndView("players");
 		List<PlayerInfo> playersInfo = iplService.getAllPlayers(null, null);
-		System.out.println("Players: " + mapper.writeValueAsString(playersInfo));
 		playersView.addObject("playersData", playersInfo);
 		return playersView;
 	}
-	
+
 	@GetMapping("ipl/player")
 	public ModelAndView addPlayer() {
 		ModelAndView playerView = new ModelAndView("player");
@@ -184,28 +201,21 @@ public class IplController {
 		playerView.addObject("roles", roles);
 		return playerView;
 	}
-	
+
 	@GetMapping("ipl/player/edit/{id}")
 	public ModelAndView editPlayer(@PathVariable Long id) {
 		ModelAndView playerView = new ModelAndView("player");
 		PlayerInfo playerInfo = iplService.getPlayerById(id);
-		try {
-			System.out.println("Player: " + mapper.writeValueAsString(playerInfo));
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
 		playerView.addObject("playerData", playerInfo);
 		return playerView;
 	}
-	
+
 	@PostMapping("ipl/savePlayer")
 	public String savePlayer(@RequestBody String playerInfoStr) {
-		System.out.println("userInfoStr: " + playerInfoStr);
 		String result = "";
 		try {
 			PlayerInfo playerInfo = mapper.readValue(playerInfoStr, PlayerInfo.class);
 			if (playerInfo != null) {
-				System.out.println("playerInfo: " + mapper.writeValueAsString(playerInfo));
 				iplService.saveOrUpdate(playerInfo);
 				result = mapper.writeValueAsString(playerInfo);
 			}
@@ -216,20 +226,20 @@ public class IplController {
 		}
 		return result;
 	}
-	
+
 	@DeleteMapping("ipl/player/delete/{id}")
 	public String deletePlayerById(@PathVariable Long id) {
 		try {
 			iplService.deletePlayerById(id);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return "failed";
 		}
 		return "success";
 	}
-	
+
 	@GetMapping("ipl/requestors")
-	public ModelAndView requestedUsers() throws JsonProcessingException {
+	public ModelAndView requestedUsers() {
 		ModelAndView usersView = new ModelAndView("requestors");
 		List<UserInfo> usersInfo = iplService.getAll();
 		List<UserInfo> requestedUsers = new ArrayList<>();
@@ -240,45 +250,41 @@ public class IplController {
 				}
 			}
 		}
-		System.out.println("Users: " + mapper.writeValueAsString(requestedUsers));
 		usersView.addObject("usersData", requestedUsers);
 		return usersView;
 	}
-	
+
 	@PostMapping("ipl/user/approve/{id}")
 	public String approveUserById(@PathVariable Long id) {
 		try {
 			iplService.approveUserById(id);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return "failed";
 		}
 		return "success";
 	}
-	
+
 	@PostMapping("ipl/user/reject/{id}")
 	public String rejectUserById(@PathVariable Long id) {
 		try {
 			iplService.rejectUserById(id);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return "failed";
 		}
 		return "success";
 	}
-	
+
 	@PostMapping("ipl/importplayers")
 	public String importPlayers(@RequestBody MultipartFile file) throws IOException {
-		System.out.println("File: " + file.getOriginalFilename());
-		System.out.println("File type: " + file.getContentType());
 		List<PlayerInfo> players = iplService.excelToIpl(file);
 		for (PlayerInfo playerInfo : players) {
 			iplService.saveOrUpdate(playerInfo);
 		}
-		System.out.println("Imported Players size: " + players.size());
 		return "";
 	}
-	
+
 	@GetMapping("ipl/pointsTable")
 	public ModelAndView getParticipants() throws JsonProcessingException {
 		ModelAndView mv = new ModelAndView("points_table");
@@ -289,7 +295,7 @@ public class IplController {
 		}
 		return mv;
 	}
-	
+
 	@GetMapping("ipl/participantPoints/{participantName}")
 	public ModelAndView showParticipantPoints(@PathVariable String participantName) {
 		ModelAndView mv = new ModelAndView("players");
@@ -305,7 +311,7 @@ public class IplController {
 		}
 		return mv;
 	}
-	
+
 	@DeleteMapping("ipl/deleteAllPlayers")
 	public String deleteAllPlayers() {
 		try {
@@ -315,15 +321,15 @@ public class IplController {
 					iplService.deletePlayerById(playerInfo.getId());
 				}
 			}
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return "failed";
 		}
 		return "success";
 	}
-	
+
 	@GetMapping("ipl/bid")
-	public ModelAndView bid() throws JsonProcessingException {
+	public ModelAndView bid(HttpServletRequest request) throws JsonProcessingException {
 		ModelAndView mv = new ModelAndView("bid");
 		List<UserInfo> usersInfo = iplService.getAll();
 		List<BidParticipantInfo> onlineUsers = new ArrayList<>();
@@ -339,7 +345,7 @@ public class IplController {
 						onlineUser = new BidParticipantInfo();
 						onlineUser.setUserId(userInfo.getId());
 						onlineUser.setUsername(userInfo.getUsername());
-						
+
 						remainingPrice = 0d;
 						if (players != null && players.size() > 0) {
 							for (PlayerInfo playerInfo : players) {
@@ -347,7 +353,8 @@ public class IplController {
 							}
 						}
 						onlineUser.setTotalPlayers(players.size());
-						onlineUser.setRemainingPrice(String.format("%.2f", (120 - remainingPrice) < 0 ? 0 : (120 - remainingPrice)));
+						onlineUser.setRemainingPrice(
+								String.format("%.2f", (120 - remainingPrice) < 0 ? 0 : (120 - remainingPrice)));
 						onlineUsers.add(onlineUser);
 					} else {
 						offlineUser = new BidParticipantInfo();
@@ -360,7 +367,8 @@ public class IplController {
 							}
 						}
 						offlineUser.setTotalPlayers(players.size());
-						offlineUser.setRemainingPrice(String.format("%.2f", (120 - remainingPrice) < 0 ? 0 : (120 - remainingPrice)));
+						offlineUser.setRemainingPrice(
+								String.format("%.2f", (120 - remainingPrice) < 0 ? 0 : (120 - remainingPrice)));
 						offlineUsers.add(offlineUser);
 					}
 				}
@@ -368,13 +376,21 @@ public class IplController {
 		}
 		mv.addObject("onlineUsers", onlineUsers);
 		mv.addObject("offlineUsers", offlineUsers);
-		
+		mv.addObject("totalBidUsers", onlineUsers.size() + offlineUsers.size());
+
 		List<PlayerInfo> players = iplService.getAllPlayers("owner", "Unsold");
-		System.out.println("players: " + mapper.writeValueAsString(players));
-		int randomNum = ThreadLocalRandom.current().nextInt(1, players.size());
-		System.out.println("randomNum: " + randomNum);
+		int randomNum = ThreadLocalRandom.current().nextInt(players.size());
 		mv.addObject("bidPlayer", players.get(randomNum));
+		
+		Object userIdObj = request.getSession(false).getAttribute("userId");
+		if (userIdObj != null) {
+			Long userId = (Long) userIdObj;
+			UserInfo userInfo = iplService.getById(userId);
+			System.out.println("online: " + userInfo.getOnline());
+			mv.addObject("online", userInfo.getOnline());
+		}
+		
 		return mv;
 	}
-	
+
 }

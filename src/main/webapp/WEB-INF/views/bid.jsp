@@ -20,9 +20,15 @@
 	<jsp:include page="navbar.jsp" />
 	
 	<div class="container pt-3">
+		<input type="hidden" id="totalBidUsers" value="${totalBidUsers}" />
+		<input type="hidden" id="online" value="${online}" />
 		<h1>Bid</h1>
 		<hr />
-		<div class="row m-1 p1 bidPlayer rounded">
+		<div id="noParticipantsDiv" class="bidPlayer rounded m-1 p1">
+			<h2 class="text-center">You are not allowed to compete in auction!</h2>
+			<h2 class="text-center">Please have atleast 2 Participants!</h2>
+		</div>
+		<div id="participantsDiv" class="row m-1 p1 bidPlayer rounded">
 			<div class="col-md-6">
 				<h2 class="text-center">Bid Player</h2>
 				<div class="row">
