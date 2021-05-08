@@ -2,6 +2,7 @@ package com.masterminds.dao;
 
 import java.util.List;
 
+import com.masterminds.entity.PickedPlayer;
 import com.masterminds.entity.PlayerInfo;
 import com.masterminds.entity.UserInfo;
 
@@ -30,5 +31,7 @@ public interface IplDAO {
 	public void rejectUserById(Long id);
 
 	public List<UserInfo> getAllOnlineUsers();
+
+	public void saveOrUpdate(PickedPlayer pickedPlayer);
 
 }

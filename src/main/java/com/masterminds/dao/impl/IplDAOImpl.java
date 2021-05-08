@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.masterminds.dao.IplDAO;
+import com.masterminds.entity.PickedPlayer;
 import com.masterminds.entity.PlayerInfo;
 import com.masterminds.entity.UserInfo;
 
@@ -142,6 +143,20 @@ public class IplDAOImpl implements IplDAO {
 		criteria.add(Restrictions.eq("online", true));
 		List<UserInfo> userList = criteria.list();
 		return null;
+	}
+
+	@Override
+	public void saveOrUpdate(PickedPlayer pickedPlayer) {
+		Session session = sessionFactory.getCurrentSession();
+		if (pickedPlayer.getId() != null) {
+			pickedPlayer.setModifiedDate(new Date());
+			session.update(pickedPlayer);
+		} else {
+			pickedPlayer.setCreatedDate(new Date());
+			pickedPlayer.setModifiedDate(new Date());
+			session.save(pickedPlayer);
+		}
+		session.flush();
 	}
 
 }

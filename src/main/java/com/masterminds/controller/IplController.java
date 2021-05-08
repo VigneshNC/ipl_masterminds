@@ -1,7 +1,10 @@
 package com.masterminds.controller;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +27,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.masterminds.entity.BidParticipantInfo;
+import com.masterminds.entity.PickedPlayer;
 import com.masterminds.entity.PlayerInfo;
 import com.masterminds.entity.PointsTable;
 import com.masterminds.entity.UserInfo;
@@ -389,11 +393,30 @@ public class IplController {
 		if (userIdObj != null) {
 			Long userId = (Long) userIdObj;
 			UserInfo userInfo = iplService.getById(userId);
-			System.out.println("online: " + userInfo.getOnline());
 			mv.addObject("online", userInfo.getOnline());
+			mv.addObject("currentUserId", userId);
 		}
 		
 		return mv;
+	}
+	
+	@PostMapping("ipl/pickPlayer")
+	public String pickPlayer(@RequestBody String pickPlayer) throws UnsupportedEncodingException, JsonMappingException, JsonProcessingException {
+		System.out.println("pickPlayer: " + pickPlayer);
+		if (!pickPlayer.isEmpty()) {
+			String pickPlayerStr = URLDecoder.decode(pickPlayer.substring(0, pickPlayer.length() - 1), "UTF-8");
+			System.out.println("Decoded pickPlayer: " + pickPlayerStr);
+			Map userMap = mapper.readValue(pickPlayerStr, Map.class);
+			if (userMap != null && userMap.size() > 0) {
+				PickedPlayer pickedPlayer = new PickedPlayer();
+//				pickedPlayer.setPlayerId((Long) userMap.get("playerId"));
+//				pickedPlayer.setUserId((Long) userMap.get("userId"));
+//				pickedPlayer.setPlayerPrice((String) userMap.get("price"));
+//				iplService.saveOrUpdate(pickedPlayer);
+				return "success";
+			}
+		}
+		return "failed";
 	}
 
 }

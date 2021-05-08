@@ -516,17 +516,12 @@ $(document).ready(function() {
 		}
 	});
 	
+	$("#btnIncrease5L, #btnIncrease20L, #btnNoBid").hide();
+	
 	if ($("#online").val() == "true") {
-		$("#btnIncrease5L, #btnIncrease20L, #btnNoBid").show();
-		if ($("#bidPrice").text().substring(0, $("#bidPrice").text().length-1) < 100) {
-			$("#btnIncrease5L").show();
-			$("#btnIncrease20L").hide();
-		} else {
-			$("#btnIncrease5L").hide();
-			$("#btnIncrease20L").show();
-		}
+		$("#btnStartBid").show();
 	} else {
-		$("#btnIncrease5L, #btnIncrease20L, #btnNoBid").hide();
+		$("#btnStartBid").hide();
 	}
 	
 	$("#btnIncrease5L").on("click", function() {
@@ -542,6 +537,11 @@ $(document).ready(function() {
 				bidPrice = bidPrice/100;
 				$("#bidPrice").text(bidPrice + "C");
 			}
+			let bidUserMap = {};
+			bidUserMap["userId"] = $("#currentUserId").val();
+			bidUserMap["playerId"] = $("#bidPlayerId").val();
+			bidUserMap["price"] = $("#bidPrice").text();
+			$("#bidUserMap").val(JSON.stringify(bidUserMap));
 		}
 	});
 	
@@ -549,22 +549,78 @@ $(document).ready(function() {
 		var bidPrice = $("#bidPrice").text();
 		if (bidPrice.includes("C")) {
 			bidPrice = bidPrice.substring(0, bidPrice.length-1);
-			bidPrice = Number(bidPrice) + 0.20;
+			bidPrice = (Number(bidPrice) + 0.20).toFixed(2);
 			$("#bidPrice").text(bidPrice + "C");
+			let bidUserMap = {};
+			bidUserMap["userId"] = $("#currentUserId").val();
+			bidUserMap["playerId"] = $("#bidPlayerId").val();
+			bidUserMap["price"] = $("#bidPrice").text();
+			$("#bidUserMap").val(JSON.stringify(bidUserMap));
 		}
 	});
 	
 	$("#btnNoBid").on("click", function() {
-		$("#btnIncrease5L, #btnDecrease5L, #btnIncrease20L, #btnDecrease20L").hide();
+		$("#btnIncrease5L, #btnIncrease20L").hide();
+		let bidUserMap = {};
+		bidUserMap["userId"] = $("#currentUserId").val();
+		bidUserMap["playerId"] = $("#bidPlayerId").val();
+		bidUserMap["price"] = $("#bidPrice").text();
+		$("#bidUserMap").val(JSON.stringify(bidUserMap));
+		$("#" + $('#currentUserId').val() + " #tdNoBid").text("Yes");
 	});
 	
 	let totalBidUsers = $("#totalBidUsers").val();
-	if (totalBidUsers < 2) {
+	if (totalBidUsers < 6) {
 		$("#noParticipantsDiv").show();
 		$("#participantsDiv").hide();
 	} else {
 		$("#noParticipantsDiv").hide();
 		$("#participantsDiv").show();
+	}
+	
+	$("#bidTimer").hide();
+	
+	$("#btnStartBid").on("click", function() {
+		$("#btnIncrease5L, #btnIncrease20L, #btnNoBid").show();
+		if ($("#bidPrice").text().substring(0, $("#bidPrice").text().length-1) < 100) {
+			$("#btnIncrease5L").show();
+			$("#btnIncrease20L").hide();
+		} else {
+			$("#btnIncrease5L").hide();
+			$("#btnIncrease20L").show();
+		}
+		setBidTimer();
+		$("#btnStartBid").hide();
+	});
+	
+	function setBidTimer() {
+		$("#bidTimer").show();
+		let bidTime = 5;
+		let bidInterval = setInterval(function() {
+			$("#bidTimer").text(bidTime);
+			if (bidTime < 1) {
+				clearInterval(bidInterval);
+				$("#bidTimer").text("Timeout");
+				$("#btnIncrease5L, #btnIncrease20L, #btnNoBid").hide();
+				pickPlayer();
+			}
+			bidTime--;
+		}, 1000);
+	}
+	
+	function pickPlayer() {
+		let userMap = $("#bidUserMap").val();
+		$.ajax({
+			type: "POST",
+			url: "/ipl/pickPlayer",
+			data: userMap,
+			success: function(result) {
+				
+			},
+			error: function(error) {
+				
+			}
+		});
 	}
 	
 	// validation to be implemented

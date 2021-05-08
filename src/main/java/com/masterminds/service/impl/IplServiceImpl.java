@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.masterminds.dao.IplDAO;
+import com.masterminds.entity.PickedPlayer;
 import com.masterminds.entity.PlayerInfo;
 import com.masterminds.entity.PointsTable;
 import com.masterminds.entity.UserInfo;
@@ -270,6 +271,11 @@ public class IplServiceImpl implements IplService {
 	@Override
 	public List<UserInfo> getAllOnlineUsers() {
 		return iplDAO.getAllOnlineUsers();
+	}
+
+	@Override
+	public void saveOrUpdate(PickedPlayer pickedPlayer) {
+		iplDAO.saveOrUpdate(pickedPlayer);
 	}
 	
 }

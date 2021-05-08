@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.masterminds.entity.PickedPlayer;
 import com.masterminds.entity.PlayerInfo;
 import com.masterminds.entity.PointsTable;
 import com.masterminds.entity.UserInfo;
@@ -38,5 +39,7 @@ public interface IplService {
 	public List<PointsTable> getAllParticipants(List<PlayerInfo> players);
 
 	public List<UserInfo> getAllOnlineUsers();
+
+	public void saveOrUpdate(PickedPlayer pickedPlayer);
 	
 }
