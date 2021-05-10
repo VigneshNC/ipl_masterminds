@@ -153,7 +153,7 @@ $(document).ready(function() {
 		$("#navItemLogout, #navItemRules, #navItemUsers, #navItemPlayers, #navItemPointsTable").show();
 		$("#navItemLogin, #navItemRegister, #navItemRequestors, #divImport, #btnDelAllPlayers, .spanEditPlayer, #line, .hideField").hide();
 	} else {
-		if (window.location.pathname != "/" || window.location.pathname != "/ipl" || window.location.pathname != "/ipl/logout") {
+		if (window.location.pathname != "/" && window.location.pathname != "/ipl" && window.location.pathname != "/ipl/logout") {
 			location.href = "/";
 		}
 		$("#navItemLogin").show();
