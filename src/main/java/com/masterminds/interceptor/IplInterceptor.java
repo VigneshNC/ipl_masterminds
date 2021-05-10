@@ -15,6 +15,10 @@ public class IplInterceptor implements HandlerInterceptor {
 		System.out.println("pre handle");
 		System.out.println("api: " + request.getServletPath());
 		String apiName = request.getServletPath();
+		System.out.println("session: " + request.getSession(false));
+		if (request.getSession(false) != null) {
+			System.out.println("session id: " + request.getSession(false).getId());
+		}
 		if (apiName != null && !apiName.isEmpty()) {
 			if ("/".equals(apiName) || "/ipl".equals(apiName) || "/ipl/login".equals(apiName)) {
 				if (request.getSession(false) != null) {
