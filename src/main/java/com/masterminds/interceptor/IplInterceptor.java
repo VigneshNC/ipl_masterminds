@@ -20,7 +20,7 @@ public class IplInterceptor implements HandlerInterceptor {
 			System.out.println("session id: " + request.getSession(false).getId());
 		}
 		if (apiName != null && !apiName.isEmpty()) {
-			if ("/".equals(apiName) || "/ipl".equals(apiName) || "/ipl/login".equals(apiName)) {
+			if ("/".equals(apiName) || "/ipl".equals(apiName) || "/ipl/logout".equals(apiName)) {
 				if (request.getSession(false) != null) {
 					request.getSession(false).invalidate();
 				}

@@ -41,7 +41,7 @@ public class IplController {
 
 	ObjectMapper mapper = new ObjectMapper();
 
-	@GetMapping({ "/", "/ipl" })
+	@GetMapping({ "/", "/ipl", "ipl/logout" })
 	public ModelAndView origin(HttpServletRequest request) {
 		if (request.getSession(false) == null) {
 			request.getSession(true);
@@ -57,27 +57,28 @@ public class IplController {
 		return new ModelAndView("ipl_home");
 	}
 
-//	@GetMapping("/ipl")
-//	public ModelAndView home() {
-//		return new ModelAndView("ipl_home");
-//	}
-
-	@GetMapping("ipl/logout")
-	public ModelAndView logout(HttpServletRequest request) {
-		Object userIdObj = request.getSession(false).getAttribute("userId");
-		if (userIdObj != null) {
-			Long userId = (Long) userIdObj;
-			UserInfo userInfo = iplService.getById(userId);
-			userInfo.setOnline(false);
-			iplService.saveOrUpdate(userInfo);
-			request.getSession(false).setAttribute("userId", null);
-		}
-		return new ModelAndView("ipl_home");
-	}
-
 	@GetMapping("ipl/register")
 	public ModelAndView register() {
 		return new ModelAndView("user");
+	}
+	
+	@GetMapping("ipl/login")
+	public ModelAndView login() {
+		return new ModelAndView("login");
+	}
+
+	@GetMapping("ipl/authenticate")
+	public Long authenticate(@RequestParam String username, @RequestParam String password) {
+		UserInfo user = iplService.getByUsernameAndPassword(username, password);
+		if (user != null) {
+			if ("requestor".equals(user.getRole())) {
+				return 1L;
+			}
+			user.setOnline(true);
+			iplService.saveOrUpdate(user);
+			return user.getId();
+		}
+		return 0L;
 	}
 
 	@PostMapping("ipl/save")
@@ -169,25 +170,6 @@ public class IplController {
 	@GetMapping("ipl/rules")
 	public ModelAndView getRules(HttpServletRequest request) {
 		return new ModelAndView("rules");
-	}
-
-	@GetMapping("ipl/login")
-	public ModelAndView login() {
-		return new ModelAndView("login");
-	}
-
-	@GetMapping("ipl/authenticate")
-	public Long authenticate(@RequestParam String username, @RequestParam String password) {
-		UserInfo user = iplService.getByUsernameAndPassword(username, password);
-		if (user != null) {
-			if ("requestor".equals(user.getRole())) {
-				return 1L;
-			}
-			user.setOnline(true);
-			iplService.saveOrUpdate(user);
-			return user.getId();
-		}
-		return 0L;
 	}
 
 	@GetMapping("ipl/playersList")
