@@ -87,7 +87,7 @@ $(document).ready(function() {
 		$("#navItemLogin, #navItemRegister, #navItemRequestors, #divImport, #btnDelAllPlayers, .spanEditPlayer, #line, .hideField").hide();
 	} else {
 		if (window.location.pathname != "/" && window.location.pathname != "/ipl" && window.location.pathname != "/ipl/logout"
-			&& window.location.pathname != "/ipl/login") {
+			&& window.location.pathname != "/ipl/login" && window.location.pathname != "/ipl/register" && window.location.pathname != "/ipl/rules") {
 			location.href = "/";
 		}
 		$("#navItemLogin").show();
