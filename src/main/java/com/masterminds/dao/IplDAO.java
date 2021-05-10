@@ -5,6 +5,7 @@ import java.util.List;
 import com.masterminds.entity.PickedPlayer;
 import com.masterminds.entity.PlayerInfo;
 import com.masterminds.entity.UserInfo;
+import com.masterminds.entity.UserSession;
 
 public interface IplDAO {
 
@@ -33,5 +34,9 @@ public interface IplDAO {
 	public List<UserInfo> getAllOnlineUsers();
 
 	public void saveOrUpdate(PickedPlayer pickedPlayer);
+
+	public void saveOrUpdate(UserSession newSession);
+
+	public UserSession getUserSessionBySessionId(String id);
 
 }

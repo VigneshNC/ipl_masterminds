@@ -9,22 +9,19 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "picked_players")
-public class PickedPlayer {
+@Table(name = "user_session")
+public class UserSession {
 
 	@Id
 	@GeneratedValue
 	@Column(name = "id")
 	private Long id;
 	
-	@Column(name = "player_id")
-	private Long playerId;
+	@Column(name = "session_id")
+	private String sessionId;
 	
-	@Column(name = "user_id")
-	private Long userId;
-	
-	@Column(name = "player_price")
-	private String playerPrice;
+	@Column(name = "online")
+	private boolean online;
 	
 	@Column(name = "created_date")
 	private Date createdDate;
@@ -40,28 +37,20 @@ public class PickedPlayer {
 		this.id = id;
 	}
 
-	public Long getPlayerId() {
-		return playerId;
+	public String getSessionId() {
+		return sessionId;
 	}
 
-	public void setPlayerId(Long playerId) {
-		this.playerId = playerId;
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
 	}
 
-	public Long getUserId() {
-		return userId;
+	public boolean isOnline() {
+		return online;
 	}
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
-
-	public String getPlayerPrice() {
-		return playerPrice;
-	}
-
-	public void setPlayerPrice(String playerPrice) {
-		this.playerPrice = playerPrice;
+	public void setOnline(boolean online) {
+		this.online = online;
 	}
 
 	public Date getCreatedDate() {

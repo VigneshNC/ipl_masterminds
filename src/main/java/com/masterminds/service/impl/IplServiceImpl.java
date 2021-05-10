@@ -23,6 +23,7 @@ import com.masterminds.entity.PickedPlayer;
 import com.masterminds.entity.PlayerInfo;
 import com.masterminds.entity.PointsTable;
 import com.masterminds.entity.UserInfo;
+import com.masterminds.entity.UserSession;
 import com.masterminds.service.IplService;
 
 @Service
@@ -276,6 +277,16 @@ public class IplServiceImpl implements IplService {
 	@Override
 	public void saveOrUpdate(PickedPlayer pickedPlayer) {
 		iplDAO.saveOrUpdate(pickedPlayer);
+	}
+
+	@Override
+	public void saveOrUpdate(UserSession newSession) {
+		iplDAO.saveOrUpdate(newSession);
+	}
+
+	@Override
+	public UserSession getUserSessionBySessionId(String id) {
+		return iplDAO.getUserSessionBySessionId(id);
 	}
 	
 }

@@ -16,6 +16,7 @@ import com.masterminds.dao.IplDAO;
 import com.masterminds.entity.PickedPlayer;
 import com.masterminds.entity.PlayerInfo;
 import com.masterminds.entity.UserInfo;
+import com.masterminds.entity.UserSession;
 
 @Repository
 @Transactional
@@ -34,7 +35,6 @@ public class IplDAOImpl implements IplDAO {
 			session.update(userInfo);
 		} else {
 			userInfo.setCreatedDate(new Date());
-			userInfo.setModifiedDate(new Date());
 			session.save(userInfo);
 		}
 		session.flush();
@@ -81,7 +81,6 @@ public class IplDAOImpl implements IplDAO {
 			session.update(playerInfo);
 		} else {
 			playerInfo.setCreatedDate(new Date());
-			playerInfo.setModifiedDate(new Date());
 			session.save(playerInfo);
 		}
 		session.flush();
@@ -153,10 +152,30 @@ public class IplDAOImpl implements IplDAO {
 			session.update(pickedPlayer);
 		} else {
 			pickedPlayer.setCreatedDate(new Date());
-			pickedPlayer.setModifiedDate(new Date());
 			session.save(pickedPlayer);
 		}
 		session.flush();
+	}
+
+	@Override
+	public void saveOrUpdate(UserSession newSession) {
+		Session session = sessionFactory.getCurrentSession();
+		if (newSession.getId() != null) {
+			newSession.setModifiedDate(new Date());
+			session.update(newSession);
+		} else {
+			newSession.setCreatedDate(new Date());
+			session.save(newSession);
+		}
+		session.flush();
+	}
+
+	@Override
+	public UserSession getUserSessionBySessionId(String id) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(UserSession.class);
+		criteria.add(Restrictions.eq("sessionId", id));
+		return (UserSession) criteria.uniqueResult();
 	}
 
 }

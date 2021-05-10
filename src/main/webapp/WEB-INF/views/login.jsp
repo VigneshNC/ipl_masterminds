@@ -10,6 +10,7 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Ubuntu:regular,bold&subset=Latin">
 	<script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+	<script type="text/javascript" src="/js/preload_ipl.js"></script>
 </head>
 <body>
 	<jsp:include page="navbar.jsp" />

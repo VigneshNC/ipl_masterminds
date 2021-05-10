@@ -19,6 +19,7 @@
 		    height: 100vh;
 		}
 	</style>
+	<script type="text/javascript" src="/js/preload_ipl.js"></script>
 </head>
 <body>
 	<jsp:include page="navbar.jsp" />

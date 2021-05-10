@@ -1,6 +1,6 @@
 $(document).ready(function() {
-	$("body").css("background-color", "#3D4D61").css("font-family", "Ubuntu, 'times new roman', times, roman, serif");
-	$(".container").addClass("rounded").css("background-color", "#F3CA20").css("padding-bottom", "15px");
+	// $("body").css("background-color", "#3D4D61").css("font-family", "Ubuntu, 'times new roman', times, roman, serif");
+	// $(".container").addClass("rounded").css("background-color", "#F3CA20").css("padding-bottom", "15px");
 	
 	$("#btnSaveOrUpdateUser").on("click", function(e) {
 		var registerUserData = $("#registerForm").serializeObject();
@@ -68,11 +68,11 @@ $(document).ready(function() {
 		return o;
 	};
 	
-	$('.nav-item').removeClass('active');
-	$("#btnBackUser").hide();
+	// $('.nav-item').removeClass('active');
+	// $("#btnBackUser").hide();
 	/*var rolesToUI = "";*/
 	
-	if (window.location.pathname.includes("ipl/register")) {
+	/*if (window.location.pathname.includes("ipl/register")) {
 		$("#h1user").html("Registeration Form");
 		$("#btnSaveOrUpdateUser").html("Save");
 		$("#navItemRegister").addClass('active');
@@ -120,13 +120,6 @@ $(document).ready(function() {
 		$("#btnBackPointsTable").hide();
 		$("#navItemPlayers").addClass('active');
 	} else if (window.location.pathname.includes("player")) {
-		/*rolesToUI = "";
-		let roles = "${roles}";
-		console.log("roles: " + roles);
-		for(var roleIndex = 0; roleIndex < roles.length; roleIndex++) {
-		    roles += "<option value='" + roles[i] + "'>" + roles[i] + "</option>";
-		}
-		$('select[name="inptProduct"]').append(rolesToUI);*/
 		$("#btnSaveOrUpdatePlayer").html("Save");
 	} else if (window.location.pathname.includes("ipl/pointsTable")) {
 		$("#navItemPointsTable").addClass('active');
@@ -158,16 +151,8 @@ $(document).ready(function() {
 		}
 		$("#navItemLogin").show();
 		$("#navItemLogout, #navItemUsers, #navItemPlayers, #navItemRequestors, #navItemPointsTable, .spanEditPlayer, #line, .hideField, #navItemProfile, #navItemBid").hide();
-	}
+	}*/
 	
-	$("#tBodyUsers tr").on("click", function() {
-		/*var columns = $(this).closest('tr').find("td");
-		var user = [];
-		$.each(columns, function(i, item) {
-			user.push(item.innerHTML);
-		});*/
-	});
-
 	$(".delete").on("click", function() {
 		Swal.fire({
 			icon: "question",

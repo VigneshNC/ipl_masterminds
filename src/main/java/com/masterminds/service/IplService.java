@@ -9,6 +9,7 @@ import com.masterminds.entity.PickedPlayer;
 import com.masterminds.entity.PlayerInfo;
 import com.masterminds.entity.PointsTable;
 import com.masterminds.entity.UserInfo;
+import com.masterminds.entity.UserSession;
 
 public interface IplService {
 
@@ -41,5 +42,9 @@ public interface IplService {
 	public List<UserInfo> getAllOnlineUsers();
 
 	public void saveOrUpdate(PickedPlayer pickedPlayer);
+
+	public void saveOrUpdate(UserSession newSession);
+
+	public UserSession getUserSessionBySessionId(String id);
 	
 }
