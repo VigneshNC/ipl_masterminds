@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import com.masterminds.entity.UserInfo;
 import com.masterminds.entity.UserSession;
 import com.masterminds.service.IplService;
 
@@ -32,6 +33,17 @@ public class IplInterceptor implements HandlerInterceptor {
 						if (request.getSession(false) != null) {
 							existingSession.setOnline(false);
 							iplService.saveOrUpdate(existingSession);
+							
+							Object userIdObj = request.getSession(false).getAttribute("userId");
+							if (userIdObj != null) {
+								Long userId = (Long) userIdObj;
+								UserInfo userInfo = iplService.getById(userId);
+								System.out.println("online: " + userInfo.getOnline());
+								userInfo.setOnline(false);
+								iplService.saveOrUpdate(userInfo);
+								request.getSession(false).setAttribute("userId", null);
+							}
+							
 							request.getSession(false).invalidate();
 						}
 					} else if("/ipl/authenticate".equals(apiName)) {

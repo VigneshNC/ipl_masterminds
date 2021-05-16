@@ -24,6 +24,7 @@
 		<input type="hidden" id="totalBidUsers" value="${totalBidUsers}" />
 		<input type="hidden" id="online" value="${online}" />
 		<input type="hidden" id="currentUserId" value="${currentUserId}" />
+		<input type="hidden" id="nextUserId" />
 		<input type="hidden" id="bidUserMap" />
 		<h1>Bid</h1>
 		<hr />
@@ -38,6 +39,7 @@
 					<div class="col-md-3"><img src="/img/batsman.jpg" width="75" height="75" class="img-rounded" alt="${bidPlayer.playerName}"></div>
 					<div class="col-md-9">
 						<input type="hidden" id="bidPlayerId" value="${bidPlayer.playerId}" />
+						<input type="hidden" id="userOrder" value="${bidPlayer.userOrder}" />
 						<div>${bidPlayer.playerName}</div>
 						<div>${bidPlayer.nationality}</div>
 						<div>Base Price is 5 Lakhs</div>
@@ -79,7 +81,7 @@
 					</thead>
 					<tbody id="tBodyOnlineParticipants">
 						<c:forEach items="${onlineUsers}" var="onlineUser">
-							<tr id="${onlineUser.userId}">
+							<tr class="onlineUserIds" id="${onlineUser.userId}">
 								<td>${onlineUser.username}</td>
 								<td>${onlineUser.totalPlayers}</td>
 								<td>${onlineUser.remainingPrice}</td>

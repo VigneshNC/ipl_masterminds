@@ -178,4 +178,21 @@ public class IplDAOImpl implements IplDAO {
 		return (UserSession) criteria.uniqueResult();
 	}
 
+	@Override
+	public List<PickedPlayer> getUpdatedPickedPlayerInfo(Long bidPlayerId) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(PickedPlayer.class);
+		criteria.add(Restrictions.eq("playerId", bidPlayerId));
+		return criteria.list();
+	}
+	
+	@Override
+	public PickedPlayer getPickedPlayerByUserIdAndPlayerId(Long userId, Long playerId) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(PickedPlayer.class);
+		criteria.add(Restrictions.eq("userId", userId));
+		criteria.add(Restrictions.eq("playerId", playerId));
+		return (PickedPlayer) criteria.uniqueResult();
+	}
+
 }

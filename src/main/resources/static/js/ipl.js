@@ -398,39 +398,46 @@ $(document).ready(function() {
 	});
 	
 	$("#btnImportPlayers").on("click", function() {
-		let formData = new FormData();
-		formData.append('file', $("#fileImportPlayers")[0].files[0]);
-		$.ajax({
-			type: "POST",
-			url: "/ipl/importplayers",
-			data: formData,
-			contentType: false,
-			processData: false,
-			enctype: 'multipart/form-data',
-			success: function(result) {
-				Swal.fire({
-					icon: "success",
-					text: "Players are imported successfully!"
-				}).then((result) => {
-					if (result.isConfirmed) {
-						window.location.href = "/ipl/playersList";
-					}
-				});
-			},
-			error: function(err) {
-				Swal.fire({
-					icon: "error",
-					text: "Players are not imported!"
-				});
-			}
-		});
+		if ($("#fileImportPlayers")[0].files.length > 0) {
+			let formData = new FormData();
+			formData.append('file', $("#fileImportPlayers")[0].files[0]);
+			$.ajax({
+				type: "POST",
+				url: "/ipl/importplayers",
+				data: formData,
+				contentType: false,
+				processData: false,
+				enctype: 'multipart/form-data',
+				success: function(result) {
+					Swal.fire({
+						icon: "success",
+						text: "Players are imported successfully!"
+					}).then((result) => {
+						if (result.isConfirmed) {
+							window.location.href = "/ipl/playersList";
+						}
+					});
+				},
+				error: function(err) {
+					Swal.fire({
+						icon: "error",
+						text: "Players are not imported!"
+					});
+				}
+			});
+		} else {
+			Swal.fire({
+				icon: "error",
+				text: "Please choose file to import!"
+			});
+		}
 	});
 	
 	$("#tBodyParticipants tr").on("click", function() {
-		if (document.cookie.includes("userOrAdmin=admin")) {
+		// if (document.cookie.includes("userOrAdmin=admin")) {
 			var columns = $(this).find("td");
 			window.location.href = "/ipl/participantPoints/" + columns[0].innerHTML;
-		}
+		// }
 	});
 	
 	$("#btnBackPointsTable").on("click", function() {
@@ -506,11 +513,11 @@ $(document).ready(function() {
 	
 	$("#btnIncrease5L, #btnIncrease20L, #btnNoBid").hide();
 	
-	if ($("#online").val() == "true") {
+	/*if ($("#online").val() == "true") {
 		$("#btnStartBid").show();
 	} else {
 		$("#btnStartBid").hide();
-	}
+	}*/
 	
 	$("#btnIncrease5L").on("click", function() {
 		var bidPrice = $("#bidPrice").text();
@@ -527,10 +534,12 @@ $(document).ready(function() {
 			}
 			let bidUserMap = {};
 			bidUserMap["userId"] = $("#currentUserId").val();
+			bidUserMap["nextUserId"] = $("#nextUserId").val();
 			bidUserMap["playerId"] = $("#bidPlayerId").val();
 			bidUserMap["price"] = $("#bidPrice").text();
-			$("#bidUserMap").val(JSON.stringify(bidUserMap));
+			pickPlayer(JSON.stringify(bidUserMap));
 		}
+		$("#btnIncrease5L").prop("disabled", true);
 	});
 	
 	$("#btnIncrease20L").on("click", function() {
@@ -541,20 +550,28 @@ $(document).ready(function() {
 			$("#bidPrice").text(bidPrice + "C");
 			let bidUserMap = {};
 			bidUserMap["userId"] = $("#currentUserId").val();
+			bidUserMap["nextUserId"] = $("#nextUserId").val();
 			bidUserMap["playerId"] = $("#bidPlayerId").val();
 			bidUserMap["price"] = $("#bidPrice").text();
 			$("#bidUserMap").val(JSON.stringify(bidUserMap));
 		}
+		$("#btnIncrease20L").prop("disabled", true);
 	});
 	
+	var bidInterval;
+	
 	$("#btnNoBid").on("click", function() {
+		clearInterval(bidInterval);
 		$("#btnIncrease5L, #btnIncrease20L").hide();
 		let bidUserMap = {};
 		bidUserMap["userId"] = $("#currentUserId").val();
+		bidUserMap["nextUserId"] = $("#nextUserId").val();
 		bidUserMap["playerId"] = $("#bidPlayerId").val();
 		bidUserMap["price"] = $("#bidPrice").text();
 		$("#bidUserMap").val(JSON.stringify(bidUserMap));
 		$("#" + $('#currentUserId').val() + " #tdNoBid").text("Yes");
+		$("#btnNoBid").prop("disabled", true);
+		$("#bidTimer").hide();
 	});
 	
 	let totalBidUsers = $("#totalBidUsers").val();
@@ -578,13 +595,28 @@ $(document).ready(function() {
 			$("#btnIncrease20L").show();
 		}
 		setBidTimer();
+		savePickedPlayerInfo();
 		$("#btnStartBid").hide();
 	});
 	
+	function savePickedPlayerInfo() {
+		let bidPlayerId = $("#bidPlayerId").val();
+		$.ajax({
+			type: "POST",
+			url: "/ipl/savePickedPlayerInfo/" + bidPlayerId,
+			success: function(result) {
+				console.log("result: " + result);
+			},
+			error: function(error) {
+			
+			}
+		});
+	}
+	
 	function setBidTimer() {
 		$("#bidTimer").show();
-		let bidTime = 5;
-		let bidInterval = setInterval(function() {
+		let bidTime = 10;
+		bidInterval = setInterval(function() {
 			$("#bidTimer").text(bidTime);
 			if (bidTime < 1) {
 				clearInterval(bidInterval);
@@ -596,19 +628,64 @@ $(document).ready(function() {
 		}, 1000);
 	}
 	
-	function pickPlayer() {
-		let userMap = $("#bidUserMap").val();
+	function pickPlayer(userMap) {
+		let bidUserMap = $("#bidUserMap").val();
 		$.ajax({
-			type: "POST",
+			type: "PUT",
 			url: "/ipl/pickPlayer",
-			data: userMap,
+			data: bidUserMap,
 			success: function(result) {
-				
+				if (result && result == "success") {
+					refreshBidPage();
+				}
 			},
 			error: function(error) {
 				
 			}
 		});
+	}
+	
+	let currentBidPlayerUserOrder = $("#userOrder").val();
+	let currentUserId = $("#currentUserId").val();
+	/*if (currentBidPlayerUserOrder && currentUserId) {
+		if (currentBidPlayerUserOrder == currentUserId) {
+			setBidTimer();
+		} else {
+			refreshBidPage();
+		}
+	}*/
+	
+	let otherOnlineUserIds = [];
+	$(".onlineUserIds").each(function() {
+		if (currentUserId < this.id) {
+			otherOnlineUserIds.push(this.id);
+		}
+	});
+	console.log("Other online user ids: " + otherOnlineUserIds);
+	
+	if (otherOnlineUserIds.length > 0) {
+		let nextUserId = Math.min.apply(Math, otherOnlineUserIds);
+		$("#nextUserId").val(nextUserId);
+		console.log("next user id: " + nextUserId);
+	}
+	
+	var bidRefreshInterval;
+	
+	function refreshBidPage() {
+		bidRefreshInterval = setInterval(function() {
+			let bidPlayerId = $("#bidPlayerId").val();
+			$.ajax({
+				type: "GET",
+				url: "/ipl/getUpdatedPickedPlayerInfo/" + bidPlayerId,
+				success: function(result) {
+					console.log("result: " + result);
+					// $("#bidPrice").text();
+				},
+				error: function(error) {
+				
+				}
+			});
+		}, 500);
 	}
 	
 	// validation to be implemented

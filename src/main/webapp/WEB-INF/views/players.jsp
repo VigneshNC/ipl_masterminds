@@ -80,7 +80,7 @@
 						<th>Match 16</th>
 						<th>Match 17</th>
 						<th>Match 18</th>
-						<th>Action</th>
+						<th class="hideField">Action</th>
 					</tr>
 				</thead>
 				<tbody id="tBodyPlayers">
@@ -114,7 +114,7 @@
 							<td>${playerData.match18}</td>
 							<td>
 								<%-- <button id="btnEditPlayer" onclick="editPlayer(${playerData.id})" class="btn btn-primary">Edit</button> --%>
-								<button id="${playerData.id}" class="btn btn-danger deletePlayer">Delete</button>
+								<button id="${playerData.id}" class="btn btn-danger deletePlayer hideField">Delete</button>
 							</td>
 						</tr>
 					</c:forEach>

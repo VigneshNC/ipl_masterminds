@@ -46,7 +46,7 @@ public class UserInfo {
 	
 	@Column(name = "online")
 	private Boolean online;
-
+	
 	public Long getId() {
 		return id;
 	}

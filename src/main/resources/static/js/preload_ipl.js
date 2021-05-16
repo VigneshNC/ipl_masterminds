@@ -79,12 +79,16 @@ $(document).ready(function() {
 	}
 	
 	if (document.cookie.includes("userOrAdmin=admin")) {
-		$("#navItemLogout, #navItemUsers, #navItemPlayers, #navItemRequestors, #navItemPointsTable, #divImport, #btnDelAllPlayers, .spanEditPlayer, #line, .hideField").show();
+		$("#navItemLogout, #navItemUsers, #navItemPlayers, #navItemRequestors, #navItemPointsTable, #line, .hideField, #btnStartBid").show();
+		if (window.location.pathname.includes("ipl/participantPoints")) {
+			$("#divImport, #btnDelAllPlayers, .spanEditPlayer").hide();
+		}
 		$("#navItemLogin, #navItemRegister").hide();
 		$("#tBodyParticipants, #tBodyPlayers tr").css("cursor", "pointer");
 	} else if (document.cookie.includes("userOrAdmin=user")) {
 		$("#navItemLogout, #navItemRules, #navItemUsers, #navItemPlayers, #navItemPointsTable").show();
-		$("#navItemLogin, #navItemRegister, #navItemRequestors, #divImport, #btnDelAllPlayers, .spanEditPlayer, #line, .hideField").hide();
+		$("#navItemLogin, #navItemRegister, #navItemRequestors, #divImport, #btnDelAllPlayers, .spanEditPlayer, #line, .hideField, #btnStartBid").hide();
+		$("#tBodyParticipants tr").css("cursor", "pointer");
 	} else {
 		if (window.location.pathname != "/" && window.location.pathname != "/ipl" && window.location.pathname != "/ipl/logout"
 			&& window.location.pathname != "/ipl/login" && window.location.pathname != "/ipl/register" && window.location.pathname != "/ipl/rules") {

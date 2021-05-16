@@ -104,6 +104,12 @@ public class PlayerInfo {
 	@Column(name = "match18")
 	private Long match18;
 	
+	@Column(name = "priority")
+	private Long priority;
+	
+	@Column(name = "user_order")
+	private Long userOrder;
+	
 	public Long getId() {
 		return id;
 	}
@@ -335,5 +341,21 @@ public class PlayerInfo {
 	public void setMatch18(Long match18) {
 		this.match18 = match18;
 	}
-	
+
+	public Long getPriority() {
+		return priority;
+	}
+
+	public void setPriority(Long priority) {
+		this.priority = priority;
+	}
+
+	public Long getUserOrder() {
+		return userOrder;
+	}
+
+	public void setUserOrder(Long userOrder) {
+		this.userOrder = userOrder;
+	}
+
 }

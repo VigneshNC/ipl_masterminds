@@ -39,4 +39,8 @@ public interface IplDAO {
 
 	public UserSession getUserSessionBySessionId(String id);
 
+	public List<PickedPlayer> getUpdatedPickedPlayerInfo(Long bidPlayerId);
+
+	public PickedPlayer getPickedPlayerByUserIdAndPlayerId(Long userId, Long playerId);
+
 }

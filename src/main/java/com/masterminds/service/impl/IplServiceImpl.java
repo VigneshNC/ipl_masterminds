@@ -1,7 +1,6 @@
 package com.masterminds.service.impl;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -287,6 +286,58 @@ public class IplServiceImpl implements IplService {
 	@Override
 	public UserSession getUserSessionBySessionId(String id) {
 		return iplDAO.getUserSessionBySessionId(id);
+	}
+
+	@Override
+	public PickedPlayer getUpdatedPickedPlayerInfo(Long bidPlayerId) {
+		List<PickedPlayer> pickedPlayerInfos = iplDAO.getUpdatedPickedPlayerInfo(bidPlayerId);
+		PickedPlayer updatedPickedPlayer = null;
+		if (pickedPlayerInfos != null && pickedPlayerInfos.size() > 0) {
+			Long currentBidPrice = 0L;
+			for (PickedPlayer pickedPlayer : pickedPlayerInfos) {
+				if (pickedPlayer.getPlayerPrice().endsWith("C")) {
+					Long pickedPlayerPrice = Long.valueOf(pickedPlayer.getPlayerPrice().split("C")[1]);
+					if (pickedPlayerPrice.longValue() > currentBidPrice.longValue()) {
+						currentBidPrice = pickedPlayerPrice;
+						updatedPickedPlayer = pickedPlayer;
+					}
+				}
+			}
+			if (updatedPickedPlayer != null) {
+				currentBidPrice = 0L;
+				for (PickedPlayer pickedPlayerInLakh : pickedPlayerInfos) {
+					if (pickedPlayerInLakh.getPlayerPrice().endsWith("L")) {
+						Long pickedPlayerPrice = Long.valueOf(pickedPlayerInLakh.getPlayerPrice().split("L")[1]);
+						if (pickedPlayerPrice.longValue() > currentBidPrice.longValue()) {
+							currentBidPrice = pickedPlayerPrice;
+							updatedPickedPlayer = pickedPlayerInLakh;
+						}
+					}
+				}
+			}
+		}
+		return updatedPickedPlayer;
+	}
+
+	@Override
+	public void savePickedPlayerInfo(Long bidPlayerId) {
+		List<UserInfo> onlineUsers = getAllOnlineUsers();
+		if (onlineUsers != null && onlineUsers.size() > 0) {
+			PickedPlayer pickedPlayer = null;
+			for (UserInfo userInfo : onlineUsers) {
+				pickedPlayer = new PickedPlayer();
+				pickedPlayer.setUserId(userInfo.getId());
+				pickedPlayer.setPlayerId(bidPlayerId);
+				pickedPlayer.setPlayerPrice("0L");
+				pickedPlayer.setStarted(false);
+				iplDAO.saveOrUpdate(pickedPlayer);
+			}
+		}
+	}
+
+	@Override
+	public PickedPlayer getPickedPlayerByUserIdAndPlayerId(Long userId, Long playerId) {
+		return iplDAO.getPickedPlayerByUserIdAndPlayerId(userId, playerId);
 	}
 	
 }

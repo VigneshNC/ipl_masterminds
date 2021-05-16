@@ -5,7 +5,9 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -13,7 +15,8 @@ import javax.persistence.Table;
 public class PickedPlayer {
 
 	@Id
-	@GeneratedValue
+	@SequenceGenerator(name = "pickedPlayerSequence", sequenceName = "picked_player_sequence", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "pickedPlayerSequence")
 	@Column(name = "id")
 	private Long id;
 	
@@ -31,6 +34,9 @@ public class PickedPlayer {
 	
 	@Column(name = "modified_date")
 	private Date modifiedDate;
+	
+	@Column(name = "started")
+	private boolean started;
 
 	public Long getId() {
 		return id;
@@ -78,6 +84,14 @@ public class PickedPlayer {
 
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
+	}
+
+	public boolean isStarted() {
+		return started;
+	}
+
+	public void setStarted(boolean started) {
+		this.started = started;
 	}
 	
 }

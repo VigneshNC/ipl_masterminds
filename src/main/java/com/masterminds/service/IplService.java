@@ -46,5 +46,11 @@ public interface IplService {
 	public void saveOrUpdate(UserSession newSession);
 
 	public UserSession getUserSessionBySessionId(String id);
+
+	public PickedPlayer getUpdatedPickedPlayerInfo(Long bidPlayerId);
+
+	public void savePickedPlayerInfo(Long bidPlayerId);
+
+	public PickedPlayer getPickedPlayerByUserIdAndPlayerId(Long userId, Long playerId);
 	
 }

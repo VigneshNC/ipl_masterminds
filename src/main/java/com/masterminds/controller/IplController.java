@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,17 +44,6 @@ public class IplController {
 
 	@GetMapping({ "/", "/ipl", "ipl/logout" })
 	public ModelAndView origin(HttpServletRequest request) {
-		if (request.getSession(false) == null) {
-			request.getSession(true);
-		}
-		Object userIdObj = request.getSession(false).getAttribute("userId");
-		if (userIdObj != null) {
-			Long userId = (Long) userIdObj;
-			UserInfo userInfo = iplService.getById(userId);
-			userInfo.setOnline(false);
-			iplService.saveOrUpdate(userInfo);
-			request.getSession(false).setAttribute("userId", null);
-		}
 		return new ModelAndView("ipl_home");
 	}
 
@@ -267,9 +257,19 @@ public class IplController {
 
 	@PostMapping("ipl/importplayers")
 	public String importPlayers(@RequestBody MultipartFile file) throws IOException {
-		List<PlayerInfo> players = iplService.excelToIpl(file);
-		for (PlayerInfo playerInfo : players) {
-			iplService.saveOrUpdate(playerInfo);
+		if (file != null) {
+			List<PlayerInfo> players = iplService.excelToIpl(file);
+			if (players != null && players.size() > 0) {
+				Collections.shuffle(players);
+				Long priority = 1L;
+				for (PlayerInfo playerInfo : players) {
+					if ("Unsold".equals(playerInfo.getOwner())) {
+						playerInfo.setPriority(priority);
+						priority++;
+					}
+					iplService.saveOrUpdate(playerInfo);
+				}
+			}
 		}
 		return "";
 	}
@@ -323,6 +323,7 @@ public class IplController {
 		List<UserInfo> usersInfo = iplService.getAll();
 		List<BidParticipantInfo> onlineUsers = new ArrayList<>();
 		List<BidParticipantInfo> offlineUsers = new ArrayList<>();
+		Long bidUserId = 0L;
 		if (usersInfo != null && usersInfo.size() > 0) {
 			double remainingPrice = 0d;
 			BidParticipantInfo onlineUser = null;
@@ -331,6 +332,9 @@ public class IplController {
 				if ("participant".equals(userInfo.getRole())) {
 					List<PlayerInfo> players = iplService.getAllPlayers("owner", userInfo.getUsername());
 					if (userInfo.getOnline() != null && userInfo.getOnline()) {
+						if (bidUserId.longValue() == 0L || (userInfo.getId().longValue() < bidUserId.longValue())) {
+							bidUserId = userInfo.getId();
+						}
 						onlineUser = new BidParticipantInfo();
 						onlineUser.setUserId(userInfo.getId());
 						onlineUser.setUsername(userInfo.getUsername());
@@ -368,8 +372,18 @@ public class IplController {
 		mv.addObject("totalBidUsers", onlineUsers.size() + offlineUsers.size());
 
 		List<PlayerInfo> players = iplService.getAllPlayers("owner", "Unsold");
-		int randomNum = ThreadLocalRandom.current().nextInt(players.size());
-		mv.addObject("bidPlayer", players.get(randomNum));
+		if (players != null && players.size() > 0) {
+			Long priority = 1L;
+			for (PlayerInfo playerInfo : players) {
+				if (priority.longValue() == playerInfo.getPriority().longValue()) {
+					mv.addObject("bidPlayer", playerInfo);
+					playerInfo.setUserOrder(bidUserId);
+					iplService.saveOrUpdate(playerInfo);
+					break;
+				}
+				priority++;
+			}
+		}
 		
 		Object userIdObj = request.getSession(false).getAttribute("userId");
 		if (userIdObj != null) {
@@ -382,7 +396,7 @@ public class IplController {
 		return mv;
 	}
 	
-	@PostMapping("ipl/pickPlayer")
+	@PutMapping("ipl/pickPlayer")
 	public String pickPlayer(@RequestBody String pickPlayer) throws UnsupportedEncodingException, JsonMappingException, JsonProcessingException {
 		System.out.println("pickPlayer: " + pickPlayer);
 		if (!pickPlayer.isEmpty()) {
@@ -390,15 +404,42 @@ public class IplController {
 			System.out.println("Decoded pickPlayer: " + pickPlayerStr);
 			Map userMap = mapper.readValue(pickPlayerStr, Map.class);
 			if (userMap != null && userMap.size() > 0) {
-				PickedPlayer pickedPlayer = new PickedPlayer();
-//				pickedPlayer.setPlayerId((Long) userMap.get("playerId"));
-//				pickedPlayer.setUserId((Long) userMap.get("userId"));
-//				pickedPlayer.setPlayerPrice((String) userMap.get("price"));
+				Long playerId = (Long) userMap.get("playerId");
+				Long userId = (Long) userMap.get("userId");
+				Long nextUserId = (Long) userMap.get("nextUserId");
+				PickedPlayer pickedPlayer = iplService.getPickedPlayerByUserIdAndPlayerId(userId, playerId);
+				pickedPlayer.setPlayerPrice((String) userMap.get("price"));
+				pickedPlayer.setStarted(false);
 //				iplService.saveOrUpdate(pickedPlayer);
+				
+				List<PlayerInfo> players = iplService.getAllPlayers("owner", "Unsold");
+				if (players != null && players.size() > 0) {
+					Long priority = 1L;
+					for (PlayerInfo playerInfo : players) {
+						if (priority.longValue() == playerInfo.getPriority().longValue()) {
+							playerInfo.setUserOrder(nextUserId);
+							iplService.saveOrUpdate(playerInfo);
+							break;
+						}
+						priority++;
+					}
+				}
+				
 				return "success";
 			}
 		}
 		return "failed";
+	}
+	
+	@GetMapping("ipl/getUpdatedPickedPlayerInfo/{bidPlayerId}")
+	public PickedPlayer getUpdatedPickedPlayerInfo(@PathVariable Long bidPlayerId) {
+		return iplService.getUpdatedPickedPlayerInfo(bidPlayerId);
+	}
+	
+	@PostMapping("ipl/savePickedPlayerInfo/{bidPlayerId}")
+	public String savePickedPlayerInfo(@PathVariable Long bidPlayerId) {
+		iplService.savePickedPlayerInfo(bidPlayerId);
+		return "success";
 	}
 
 }
