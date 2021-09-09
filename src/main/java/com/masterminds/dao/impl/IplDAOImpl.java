@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -27,6 +28,15 @@ public class IplDAOImpl implements IplDAO {
 	@Autowired
 	SessionFactory sessionFactory;
 	
+	@Override
+	public UserInfo getByEmailAndPassword(String email, String password) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(UserInfo.class);
+		criteria.add(Restrictions.eq("email", email));
+		criteria.add(Restrictions.eq("password", password));
+		return (UserInfo) criteria.uniqueResult();
+	}
+
 	@Override
 	public void saveOrUpdate(UserInfo userInfo) {
 		Session session = sessionFactory.getCurrentSession();
@@ -87,11 +97,14 @@ public class IplDAOImpl implements IplDAO {
 	}
 
 	@Override
-	public List<PlayerInfo> getAllPlayers(String colName, String value) {
+	public List<PlayerInfo> getAllPlayers(String colName, String value, String orderColName) {
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(PlayerInfo.class);
 		if (colName != null && !colName.isEmpty() && value != null && !value.isEmpty()) {
 			criteria.add(Restrictions.eq(colName, value));
+		}
+		if (orderColName != null && !orderColName.isEmpty()) {
+			criteria.addOrder(Order.asc(orderColName));
 		}
 		List<PlayerInfo> playerList = criteria.list();
 		return playerList;
@@ -139,7 +152,8 @@ public class IplDAOImpl implements IplDAO {
 	public List<UserInfo> getAllOnlineUsers() {
 		Session session = sessionFactory.getCurrentSession();
 		Criteria criteria = session.createCriteria(UserInfo.class);
-		criteria.add(Restrictions.eq("online", true));
+		criteria.add(Restrictions.eq("online", "true"));
+		criteria.add(Restrictions.eq("role", "participant"));
 		List<UserInfo> userList = criteria.list();
 		return null;
 	}
@@ -193,6 +207,31 @@ public class IplDAOImpl implements IplDAO {
 		criteria.add(Restrictions.eq("userId", userId));
 		criteria.add(Restrictions.eq("playerId", playerId));
 		return (PickedPlayer) criteria.uniqueResult();
+	}
+
+	@Override
+	public List<PickedPlayer> getNotStartedPickedPlayers(Long bidPlayerId) {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(PickedPlayer.class);
+		criteria.add(Restrictions.eq("playerId", bidPlayerId));
+		criteria.add(Restrictions.eq("started", false));
+		return criteria.list();
+	}
+
+	@Override
+	public List<UserInfo> getAllRequestors() {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(UserInfo.class);
+		criteria.add(Restrictions.eq("role", "requestor"));
+		return criteria.list();
+	}
+	
+	@Override
+	public List<UserInfo> getAllParticipants() {
+		Session session = sessionFactory.getCurrentSession();
+		Criteria criteria = session.createCriteria(UserInfo.class);
+		criteria.add(Restrictions.eq("role", "participant"));
+		return criteria.list();
 	}
 
 }

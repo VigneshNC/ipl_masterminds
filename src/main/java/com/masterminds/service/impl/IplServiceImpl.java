@@ -31,6 +31,15 @@ public class IplServiceImpl implements IplService {
 	@Autowired
 	IplDAO iplDAO;
 	
+//	New start
+	
+	@Override
+	public UserInfo getByEmailAndPassword(String email, String password) {
+		return iplDAO.getByEmailAndPassword(email, password);
+	}
+
+//	New end
+
 	@Override
 	public void saveOrUpdate(UserInfo userInfo) {
 		iplDAO.saveOrUpdate(userInfo);
@@ -67,8 +76,8 @@ public class IplServiceImpl implements IplService {
 	}
 
 	@Override
-	public List<PlayerInfo> getAllPlayers(String colName, String value) {
-		return iplDAO.getAllPlayers(colName, value);
+	public List<PlayerInfo> getAllPlayers(String colName, String value, String orderColName) {
+		return iplDAO.getAllPlayers(colName, value, orderColName);
 	}
 
 	@Override
@@ -321,16 +330,19 @@ public class IplServiceImpl implements IplService {
 
 	@Override
 	public void savePickedPlayerInfo(Long bidPlayerId) {
-		List<UserInfo> onlineUsers = getAllOnlineUsers();
-		if (onlineUsers != null && onlineUsers.size() > 0) {
+//		List<UserInfo> onlineUsers = getAllOnlineUsers();
+		List<UserInfo> allUsers = getAll();
+		if (allUsers != null && allUsers.size() > 0) {
 			PickedPlayer pickedPlayer = null;
-			for (UserInfo userInfo : onlineUsers) {
-				pickedPlayer = new PickedPlayer();
-				pickedPlayer.setUserId(userInfo.getId());
-				pickedPlayer.setPlayerId(bidPlayerId);
-				pickedPlayer.setPlayerPrice("0L");
-				pickedPlayer.setStarted(false);
-				iplDAO.saveOrUpdate(pickedPlayer);
+			for (UserInfo userInfo : allUsers) {
+				if (userInfo.getOnline() != null && userInfo.getOnline() && "participant".equals(userInfo.getRole())) {
+					pickedPlayer = new PickedPlayer();
+					pickedPlayer.setUserId(userInfo.getId());
+					pickedPlayer.setPlayerId(bidPlayerId);
+					pickedPlayer.setPlayerPrice("0L");
+					pickedPlayer.setStarted(false);
+					iplDAO.saveOrUpdate(pickedPlayer);
+				}
 			}
 		}
 	}
@@ -338,6 +350,27 @@ public class IplServiceImpl implements IplService {
 	@Override
 	public PickedPlayer getPickedPlayerByUserIdAndPlayerId(Long userId, Long playerId) {
 		return iplDAO.getPickedPlayerByUserIdAndPlayerId(userId, playerId);
+	}
+
+	@Override
+	public PickedPlayer getCurrentTurnPlayer(Long bidPlayerId) {
+		List<PickedPlayer> pickedPlayerInfos = iplDAO.getNotStartedPickedPlayers(bidPlayerId);
+		if (pickedPlayerInfos != null && pickedPlayerInfos.size() > 0) {
+			Collections.sort(pickedPlayerInfos);
+			return pickedPlayerInfos.get(0);
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public List<UserInfo> getAllRequestors() {
+		return iplDAO.getAllRequestors();
+	}
+	
+	@Override
+	public List<UserInfo> getAllParticipants() {
+		return iplDAO.getAllParticipants();
 	}
 	
 }

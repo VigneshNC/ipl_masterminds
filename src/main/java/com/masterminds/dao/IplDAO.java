@@ -8,6 +8,12 @@ import com.masterminds.entity.UserInfo;
 import com.masterminds.entity.UserSession;
 
 public interface IplDAO {
+	
+//	New start
+	
+	public UserInfo getByEmailAndPassword(String email, String password);
+	
+//	New end
 
 	public void saveOrUpdate(UserInfo userInfo);
 	
@@ -21,7 +27,7 @@ public interface IplDAO {
 
 	public void saveOrUpdate(PlayerInfo playerInfo);
 
-	public List<PlayerInfo> getAllPlayers(String colName, String value);
+	public List<PlayerInfo> getAllPlayers(String colName, String value, String orderColName);
 
 	public PlayerInfo getPlayerById(Long id);
 
@@ -42,5 +48,11 @@ public interface IplDAO {
 	public List<PickedPlayer> getUpdatedPickedPlayerInfo(Long bidPlayerId);
 
 	public PickedPlayer getPickedPlayerByUserIdAndPlayerId(Long userId, Long playerId);
+
+	public List<PickedPlayer> getNotStartedPickedPlayers(Long bidPlayerId);
+
+	public List<UserInfo> getAllRequestors();
+
+	public List<UserInfo> getAllParticipants();
 
 }

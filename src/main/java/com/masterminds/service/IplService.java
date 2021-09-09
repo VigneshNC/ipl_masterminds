@@ -12,6 +12,12 @@ import com.masterminds.entity.UserInfo;
 import com.masterminds.entity.UserSession;
 
 public interface IplService {
+	
+//	New start
+	
+	public UserInfo getByEmailAndPassword(String email, String password);
+	
+//	New end
 
 	public void saveOrUpdate(UserInfo userInfo);
 	
@@ -27,7 +33,7 @@ public interface IplService {
 	
 	public void saveOrUpdate(PlayerInfo playerInfo);
 
-	public List<PlayerInfo> getAllPlayers(String colName, String value);
+	public List<PlayerInfo> getAllPlayers(String colName, String value, String orderColName);
 
 	public void deletePlayerById(Long id);
 
@@ -52,5 +58,11 @@ public interface IplService {
 	public void savePickedPlayerInfo(Long bidPlayerId);
 
 	public PickedPlayer getPickedPlayerByUserIdAndPlayerId(Long userId, Long playerId);
-	
+
+	public PickedPlayer getCurrentTurnPlayer(Long bidPlayerId);
+
+	public List<UserInfo> getAllRequestors();
+
+	public List<UserInfo> getAllParticipants();
+
 }

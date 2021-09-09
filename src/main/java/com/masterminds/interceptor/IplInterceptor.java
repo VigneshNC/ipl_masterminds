@@ -11,7 +11,7 @@ import com.masterminds.entity.UserInfo;
 import com.masterminds.entity.UserSession;
 import com.masterminds.service.IplService;
 
-@Component
+//@Component
 public class IplInterceptor implements HandlerInterceptor {
 	
 	@Autowired

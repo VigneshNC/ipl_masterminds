@@ -537,7 +537,7 @@ $(document).ready(function() {
 			bidUserMap["nextUserId"] = $("#nextUserId").val();
 			bidUserMap["playerId"] = $("#bidPlayerId").val();
 			bidUserMap["price"] = $("#bidPrice").text();
-			pickPlayer(JSON.stringify(bidUserMap));
+			$("#bidUserMap").val(JSON.stringify(bidUserMap));
 		}
 		$("#btnIncrease5L").prop("disabled", true);
 	});
@@ -586,15 +586,6 @@ $(document).ready(function() {
 	$("#bidTimer").hide();
 	
 	$("#btnStartBid").on("click", function() {
-		$("#btnIncrease5L, #btnIncrease20L, #btnNoBid").show();
-		if ($("#bidPrice").text().substring(0, $("#bidPrice").text().length-1) < 100) {
-			$("#btnIncrease5L").show();
-			$("#btnIncrease20L").hide();
-		} else {
-			$("#btnIncrease5L").hide();
-			$("#btnIncrease20L").show();
-		}
-		setBidTimer();
 		savePickedPlayerInfo();
 		$("#btnStartBid").hide();
 	});
@@ -608,13 +599,21 @@ $(document).ready(function() {
 				console.log("result: " + result);
 			},
 			error: function(error) {
-			
+				console.log(error);
 			}
 		});
 	}
 	
 	function setBidTimer() {
 		$("#bidTimer").show();
+		$("#btnIncrease5L, #btnIncrease20L, #btnNoBid").show();
+		if ($("#bidPrice").text().substring(0, $("#bidPrice").text().length-1) < 100) {
+			$("#btnIncrease5L").show();
+			$("#btnIncrease20L").hide();
+		} else {
+			$("#btnIncrease5L").hide();
+			$("#btnIncrease20L").show();
+		}
 		let bidTime = 10;
 		bidInterval = setInterval(function() {
 			$("#bidTimer").text(bidTime);
@@ -628,32 +627,23 @@ $(document).ready(function() {
 		}, 1000);
 	}
 	
-	function pickPlayer(userMap) {
+	function pickPlayer() {
 		let bidUserMap = $("#bidUserMap").val();
 		$.ajax({
 			type: "PUT",
 			url: "/ipl/pickPlayer",
-			data: bidUserMap,
+			contentType: "application/json",
+			data: JSON.parse(bidUserMap),
 			success: function(result) {
 				if (result && result == "success") {
-					refreshBidPage();
+					refreshBidPage("false");
 				}
 			},
 			error: function(error) {
-				
+				console.log(error);
 			}
 		});
 	}
-	
-	let currentBidPlayerUserOrder = $("#userOrder").val();
-	let currentUserId = $("#currentUserId").val();
-	/*if (currentBidPlayerUserOrder && currentUserId) {
-		if (currentBidPlayerUserOrder == currentUserId) {
-			setBidTimer();
-		} else {
-			refreshBidPage();
-		}
-	}*/
 	
 	let otherOnlineUserIds = [];
 	$(".onlineUserIds").each(function() {
@@ -671,21 +661,58 @@ $(document).ready(function() {
 	
 	var bidRefreshInterval;
 	
-	function refreshBidPage() {
+	function refreshBidPage(isCurrentUser) {
 		bidRefreshInterval = setInterval(function() {
 			let bidPlayerId = $("#bidPlayerId").val();
-			$.ajax({
-				type: "GET",
-				url: "/ipl/getUpdatedPickedPlayerInfo/" + bidPlayerId,
-				success: function(result) {
-					console.log("result: " + result);
-					// $("#bidPrice").text();
-				},
-				error: function(error) {
-				
+			
+			if (bidPlayerId) {
+				if (isCurrentUser == "true") {
+					$.ajax({
+						type: "GET",
+						url: "/ipl/getCurrentTurnPlayer/" + bidPlayerId,
+						success: function(result) {
+							clearInterval(bidRefreshInterval);
+							console.log(result);
+							if (result) {
+								let currentBidPlayerUserOrder = $("#userOrder").val();
+								let currentUserId = $("#currentUserId").val();
+								
+								if (currentBidPlayerUserOrder && result.userId) {
+									if (currentBidPlayerUserOrder == result.userId) {
+										clearInterval(bidRefreshInterval);
+										setBidTimer();
+									} else {
+										refreshBidPage("false");
+									}
+								}
+							} else {
+								refreshBidPage("false");
+							}
+						},
+						error: function(error) {
+							console.log("error: " + error);
+						}
+					});
+				} else {
+					$.ajax({
+						type: "GET",
+						url: "/ipl/getUpdatedPickedPlayerInfo/" + bidPlayerId,
+						success: function(result) {
+							console.log("result: " + result);
+							// $("#bidPrice").text();
+							refreshBidPage("true");
+						},
+						error: function(error) {
+							console.log(error);
+						}
+					});
 				}
-			});
+			}
 		}, 500);
+	}
+	
+	if (document.cookie.includes("userOrAdmin=user") && window.location.pathname.includes("ipl/bid")) {
+		refreshBidPage("true");
 	}
 	
 	// validation to be implemented

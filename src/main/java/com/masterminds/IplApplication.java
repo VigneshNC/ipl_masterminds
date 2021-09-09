@@ -39,7 +39,6 @@ public class IplApplication {
 	private String HBM2DDL_AUTO;
 
 	public static void main(String[] args) {
-		System.out.println("Before start!");
 		SpringApplication.run(IplApplication.class, args);
 		System.out.println("started!");
 	}

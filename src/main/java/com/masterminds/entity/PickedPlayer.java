@@ -10,9 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-@Entity
-@Table(name = "picked_players")
-public class PickedPlayer {
+//@Entity
+//@Table(name = "picked_players")
+public class PickedPlayer implements Comparable<PickedPlayer> {
 
 	@Id
 	@SequenceGenerator(name = "pickedPlayerSequence", sequenceName = "picked_player_sequence", initialValue = 1, allocationSize = 1)
@@ -92,6 +92,11 @@ public class PickedPlayer {
 
 	public void setStarted(boolean started) {
 		this.started = started;
+	}
+
+	@Override
+	public int compareTo(PickedPlayer o) {
+		return this.getUserId().compareTo(o.getUserId());
 	}
 	
 }

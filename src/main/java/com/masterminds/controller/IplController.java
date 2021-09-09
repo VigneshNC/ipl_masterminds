@@ -8,17 +8,18 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,6 +36,9 @@ import com.masterminds.entity.UserInfo;
 import com.masterminds.service.IplService;
 
 @RestController
+//@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin(origins="https://ipl-angular.herokuapp.com/")
+@RequestMapping("ipl")
 public class IplController {
 
 	@Autowired
@@ -57,53 +61,73 @@ public class IplController {
 		return new ModelAndView("login");
 	}
 
-	@GetMapping("ipl/authenticate")
-	public Long authenticate(@RequestParam String username, @RequestParam String password) {
-		UserInfo user = iplService.getByUsernameAndPassword(username, password);
+	@GetMapping("/authenticate")
+	public String authenticate(@RequestParam String email, @RequestParam String password) throws JsonProcessingException {
+		Map<String, Object> resultMap = new HashMap<>();
+//		UserInfo user = iplService.getByUsernameAndPassword(username, password);
+		UserInfo user = iplService.getByEmailAndPassword(email, password);
+//		if (user != null) {
+//			if ("requestor".equals(user.getRole())) {
+//				return 1L;
+//			}
+//			user.setOnline(true);
+//			iplService.saveOrUpdate(user);
+//			return user.getId();
+//		}
+//		return 0L;
 		if (user != null) {
-			if ("requestor".equals(user.getRole())) {
-				return 1L;
-			}
-			user.setOnline(true);
-			iplService.saveOrUpdate(user);
-			return user.getId();
+			resultMap.put("status", "success");
+			resultMap.put("userId", user.getId());
+		} else {
+			resultMap.put("status", "failed");
+			resultMap.put("reason", "Invalid username or password!");
 		}
-		return 0L;
+		return mapper.writeValueAsString(resultMap);
 	}
-
-	@PostMapping("ipl/save")
-	public Map<String, String> saveUserInfo(@RequestBody String userInfoStr)
-			throws JsonMappingException, JsonProcessingException {
-		Map<String, String> resultMap = new HashMap<>();
-		UserInfo userInfo = mapper.readValue(userInfoStr, UserInfo.class);
-		if (userInfo != null) {
-			List<UserInfo> users = iplService.getAll();
-			if (users != null && users.size() > 0) {
-				for (UserInfo user : users) {
-					if (user.getUsername() != null && user.getUsername().equalsIgnoreCase(userInfo.getUsername())) {
-						resultMap.put("status", "duplicate");
-						resultMap.put("reason", "username");
-						return resultMap;
-					} else if (user.getTeamName() != null
-							&& user.getTeamName().equalsIgnoreCase(userInfo.getTeamName())) {
-						resultMap.put("status", "duplicate");
-						resultMap.put("reason", "teamname");
-						return resultMap;
+	
+	@PostMapping("/saveOrUpdate")
+	public String saveOrUpdateUserInfo(@RequestBody UserInfo userInfo) throws JsonProcessingException {
+		Map<String, Object> resultMap = new HashMap<>();
+//		System.out.println("userInfoStr: " + userInfoStr);
+		System.out.println("userinfo: " + mapper.writeValueAsString(userInfo));
+		try {
+//			UserInfo userInfo = mapper.readValue(userInfoStr, UserInfo.class);
+			if (userInfo != null) {
+				if (userInfo.getId() == null) {
+					List<UserInfo> users = iplService.getAll();
+					if (users != null && users.size() > 0) {
+						for (UserInfo user : users) {
+							if (user.getEmail() != null && user.getEmail().equalsIgnoreCase(userInfo.getEmail())) {
+								resultMap.put("status", "failed");
+								resultMap.put("reason", "Email already exists!");
+								return mapper.writeValueAsString(resultMap);
+	//						} else if (user.getTeamName() != null
+	//								&& user.getTeamName().equalsIgnoreCase(userInfo.getTeamName())) {
+	//							resultMap.put("status", "duplicate");
+	//							resultMap.put("reason", "teamname");
+	//							return resultMap;
+							}
+						}
 					}
 				}
+				if (userInfo.getRole() == null || userInfo.getRole().isEmpty()) {
+					userInfo.setRole("requestor");
+				}
+				try {
+					iplService.saveOrUpdate(userInfo);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				resultMap.put("status", "success");
+				resultMap.put("userInfo", userInfo);
 			}
-
-			userInfo.setRole("requestor");
-			try {
-				iplService.saveOrUpdate(userInfo);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			String userDataStr = mapper.writeValueAsString(userInfo);
-			resultMap.put("status", "success");
-			resultMap.put("userInfo", userDataStr);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			resultMap.put("status", "failed");
+			resultMap.put("reason", ex.getMessage());
+			return mapper.writeValueAsString(resultMap);
 		}
-		return resultMap;
+		return mapper.writeValueAsString(resultMap);
 	}
 
 	@GetMapping("ipl/user/view/{id}")
@@ -122,12 +146,22 @@ public class IplController {
 		return userView;
 	}
 
-	@GetMapping("ipl/user/edit/{id}")
-	public ModelAndView editUserById(@PathVariable Long id) {
-		ModelAndView userView = new ModelAndView("user");
+//	@GetMapping("ipl/user/edit/{id}")
+	@GetMapping("/user/{id}")
+	public String editUserById(@PathVariable Long id) throws JsonProcessingException {
+//		ModelAndView userView = new ModelAndView("user");
+		Map<String, Object> resultMap = new HashMap<>();
 		UserInfo userInfo = iplService.getById(id);
-		userView.addObject("userData", userInfo);
-		return userView;
+		if (userInfo != null) {
+			resultMap.put("status", "success");
+			resultMap.put("userInfo", userInfo);
+		} else {
+			resultMap.put("status", "failed");
+			resultMap.put("reason", "Invalid user id!");
+		}
+//		userView.addObject("userData", userInfo);
+//		return userView;
+		return mapper.writeValueAsString(resultMap);
 	}
 
 	@GetMapping("ipl/users")
@@ -165,7 +199,7 @@ public class IplController {
 	@GetMapping("ipl/playersList")
 	public ModelAndView getPlayers() throws JsonProcessingException {
 		ModelAndView playersView = new ModelAndView("players");
-		List<PlayerInfo> playersInfo = iplService.getAllPlayers(null, null);
+		List<PlayerInfo> playersInfo = iplService.getAllPlayers(null, null, null);
 		playersView.addObject("playersData", playersInfo);
 		return playersView;
 	}
@@ -255,29 +289,42 @@ public class IplController {
 		return "success";
 	}
 
-	@PostMapping("ipl/importplayers")
+	@PostMapping("/importplayers")
 	public String importPlayers(@RequestBody MultipartFile file) throws IOException {
-		if (file != null) {
-			List<PlayerInfo> players = iplService.excelToIpl(file);
-			if (players != null && players.size() > 0) {
-				Collections.shuffle(players);
-				Long priority = 1L;
-				for (PlayerInfo playerInfo : players) {
-					if ("Unsold".equals(playerInfo.getOwner())) {
-						playerInfo.setPriority(priority);
-						priority++;
+		Map<String, Object> resultMap = new HashMap<>();
+		try {
+			if (file != null) {
+				List<PlayerInfo> players = iplService.excelToIpl(file);
+				if (players != null && players.size() > 0) {
+					Collections.shuffle(players);
+					Long priority = 1L;
+					for (PlayerInfo playerInfo : players) {
+						if ("Unsold".equals(playerInfo.getOwner())) {
+							playerInfo.setPriority(priority);
+							priority++;
+						}
+						iplService.saveOrUpdate(playerInfo);
 					}
-					iplService.saveOrUpdate(playerInfo);
+					resultMap.put("status", "success");
+					resultMap.put("reason", "Players are imported successfully");
+					List<PlayerInfo> savedPlayers = iplService.getAllPlayers(null, null, null);
+					resultMap.put("players", savedPlayers);
+					
 				}
 			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			resultMap.put("status", "failed");
+			resultMap.put("reason", ex.getMessage());
+			return mapper.writeValueAsString(resultMap);
 		}
-		return "";
+		return mapper.writeValueAsString(resultMap);
 	}
 
 	@GetMapping("ipl/pointsTable")
 	public ModelAndView getParticipants() throws JsonProcessingException {
 		ModelAndView mv = new ModelAndView("points_table");
-		List<PlayerInfo> players = iplService.getAllPlayers(null, null);
+		List<PlayerInfo> players = iplService.getAllPlayers(null, null, null);
 		if (players != null && players.size() > 0) {
 			List<PointsTable> pointsTable = iplService.getAllParticipants(players);
 			mv.addObject("pointsTable", pointsTable);
@@ -288,7 +335,7 @@ public class IplController {
 	@GetMapping("ipl/participantPoints/{participantName}")
 	public ModelAndView showParticipantPoints(@PathVariable String participantName) {
 		ModelAndView mv = new ModelAndView("players");
-		List<PlayerInfo> players = iplService.getAllPlayers("owner", participantName);
+		List<PlayerInfo> players = iplService.getAllPlayers("owner", participantName, null);
 		if (players != null && players.size() > 0) {
 			mv.addObject("playersData", players);
 			Long points = 0L;
@@ -301,25 +348,30 @@ public class IplController {
 		return mv;
 	}
 
-	@DeleteMapping("ipl/deleteAllPlayers")
-	public String deleteAllPlayers() {
+	@DeleteMapping("/deleteAllPlayers")
+	public String deleteAllPlayers() throws JsonProcessingException {
+		Map<String, Object> resultMap = new HashMap<>();
 		try {
-			List<PlayerInfo> players = iplService.getAllPlayers(null, null);
+			List<PlayerInfo> players = iplService.getAllPlayers(null, null, null);
 			if (players != null && players.size() > 0) {
 				for (PlayerInfo playerInfo : players) {
 					iplService.deletePlayerById(playerInfo.getId());
 				}
+				resultMap.put("status", "success");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "failed";
+			resultMap.put("status", "failed");
+			resultMap.put("reason", e.getMessage());
+			return mapper.writeValueAsString(resultMap);
 		}
-		return "success";
+		return mapper.writeValueAsString(resultMap);
 	}
 
-	@GetMapping("ipl/bid")
-	public ModelAndView bid(HttpServletRequest request) throws JsonProcessingException {
-		ModelAndView mv = new ModelAndView("bid");
+	@GetMapping("bid")
+	public Map<String, Object> bid(HttpServletRequest request) throws JsonProcessingException {
+		Map<String, Object> resultMap = new HashMap<>();
+//		ModelAndView mv = new ModelAndView("bid");
 		List<UserInfo> usersInfo = iplService.getAll();
 		List<BidParticipantInfo> onlineUsers = new ArrayList<>();
 		List<BidParticipantInfo> offlineUsers = new ArrayList<>();
@@ -330,7 +382,7 @@ public class IplController {
 			BidParticipantInfo offlineUser = null;
 			for (UserInfo userInfo : usersInfo) {
 				if ("participant".equals(userInfo.getRole())) {
-					List<PlayerInfo> players = iplService.getAllPlayers("owner", userInfo.getUsername());
+					List<PlayerInfo> players = iplService.getAllPlayers("owner", userInfo.getUsername(), null);
 					if (userInfo.getOnline() != null && userInfo.getOnline()) {
 						if (bidUserId.longValue() == 0L || (userInfo.getId().longValue() < bidUserId.longValue())) {
 							bidUserId = userInfo.getId();
@@ -367,17 +419,23 @@ public class IplController {
 				}
 			}
 		}
-		mv.addObject("onlineUsers", onlineUsers);
-		mv.addObject("offlineUsers", offlineUsers);
-		mv.addObject("totalBidUsers", onlineUsers.size() + offlineUsers.size());
+//		mv.addObject("onlineUsers", onlineUsers);
+//		mv.addObject("offlineUsers", offlineUsers);
+//		mv.addObject("totalBidUsers", onlineUsers.size() + offlineUsers.size());
+		resultMap.put("onlineUsers", onlineUsers);
+		resultMap.put("offlineUsers", offlineUsers);
 
-		List<PlayerInfo> players = iplService.getAllPlayers("owner", "Unsold");
+		List<PlayerInfo> players = iplService.getAllPlayers("owner", "Unsold", "priority");
+		System.out.println("players size: " + players.size());
 		if (players != null && players.size() > 0) {
 			Long priority = 1L;
 			for (PlayerInfo playerInfo : players) {
-				if (priority.longValue() == playerInfo.getPriority().longValue()) {
-					mv.addObject("bidPlayer", playerInfo);
+				System.out.println("player info priority: " + playerInfo.getPriority());
+				System.out.println("current priority: " + priority);
+				if (playerInfo.getPriority() != null && priority.longValue() == playerInfo.getPriority().longValue()) {
 					playerInfo.setUserOrder(bidUserId);
+//					mv.addObject("bidPlayer", playerInfo);
+					resultMap.put("bidPlayer", playerInfo);
 					iplService.saveOrUpdate(playerInfo);
 					break;
 				}
@@ -385,15 +443,16 @@ public class IplController {
 			}
 		}
 		
-		Object userIdObj = request.getSession(false).getAttribute("userId");
-		if (userIdObj != null) {
-			Long userId = (Long) userIdObj;
-			UserInfo userInfo = iplService.getById(userId);
-			mv.addObject("online", userInfo.getOnline());
-			mv.addObject("currentUserId", userId);
-		}
+//		Object userIdObj = request.getSession(false).getAttribute("userId");
+//		if (userIdObj != null) {
+//			Long userId = (Long) userIdObj;
+//			UserInfo userInfo = iplService.getById(userId);
+//			mv.addObject("online", userInfo.getOnline());
+//			mv.addObject("currentUserId", userId);
+//		}
 		
-		return mv;
+//		return mv;
+		return resultMap;
 	}
 	
 	@PutMapping("ipl/pickPlayer")
@@ -412,11 +471,11 @@ public class IplController {
 				pickedPlayer.setStarted(false);
 //				iplService.saveOrUpdate(pickedPlayer);
 				
-				List<PlayerInfo> players = iplService.getAllPlayers("owner", "Unsold");
+				List<PlayerInfo> players = iplService.getAllPlayers("owner", "Unsold", null);
 				if (players != null && players.size() > 0) {
 					Long priority = 1L;
 					for (PlayerInfo playerInfo : players) {
-						if (priority.longValue() == playerInfo.getPriority().longValue()) {
+						if (playerInfo.getPriority() != null && priority.longValue() == playerInfo.getPriority().longValue()) {
 							playerInfo.setUserOrder(nextUserId);
 							iplService.saveOrUpdate(playerInfo);
 							break;
@@ -441,5 +500,87 @@ public class IplController {
 		iplService.savePickedPlayerInfo(bidPlayerId);
 		return "success";
 	}
-
+	
+	@GetMapping("ipl/getCurrentTurnPlayer/{bidPlayerId}")
+	public PickedPlayer getCurrentTurnPlayer(@PathVariable Long bidPlayerId) {
+		PickedPlayer currentTurnPlayer = iplService.getCurrentTurnPlayer(bidPlayerId);
+		if (currentTurnPlayer != null) {
+			return currentTurnPlayer;
+		} else {
+			return null;
+		}
+	}
+	
+	@GetMapping("/getAllRequestors")
+	public String getAllRequestors() throws JsonProcessingException {
+		return mapper.writeValueAsString(iplService.getAllRequestors());
+	}
+	
+	@GetMapping("/getAllParticipants")
+	public String getAllParticipants() throws JsonProcessingException {
+		return mapper.writeValueAsString(iplService.getAllParticipants());
+	}
+	
+	@PutMapping("/approveRequestor")
+	public String approveRequestor(@RequestBody UserInfo userInfo) throws JsonProcessingException {
+		Map<String, Object> resultMap = new HashMap<>();
+		try {
+			userInfo.setRole("participant");
+			iplService.saveOrUpdate(userInfo);
+			resultMap.put("status", "success");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			resultMap.put("status", "failed");
+			resultMap.put("reason", ex.getMessage());
+			return mapper.writeValueAsString(resultMap);
+		}
+		return mapper.writeValueAsString(resultMap);
+	}
+	
+	@DeleteMapping("/deleteParticipant")
+	public String deleteParticipant(@RequestParam Long participantId) throws JsonProcessingException {
+		Map<String, Object> resultMap = new HashMap<>();
+		try {
+			iplService.deleteById(participantId);
+			resultMap.put("status", "success");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			resultMap.put("status", "failed");
+			resultMap.put("reason", ex.getMessage());
+			return mapper.writeValueAsString(resultMap);
+		}
+		return mapper.writeValueAsString(resultMap);
+	}
+	
+	@PutMapping("/rejectParticipant")
+	public String rejectParticipant(@RequestBody UserInfo userInfo) throws JsonProcessingException {
+		Map<String, Object> resultMap = new HashMap<>();
+		try {
+			userInfo.setRole("requestor");
+			iplService.saveOrUpdate(userInfo);
+			resultMap.put("status", "success");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			resultMap.put("status", "failed");
+			resultMap.put("reason", ex.getMessage());
+			return mapper.writeValueAsString(resultMap);
+		}
+		return mapper.writeValueAsString(resultMap);
+	}
+	
+	@GetMapping("/getAllPlayers")
+	public String getAllPlayers() throws JsonProcessingException {
+		return mapper.writeValueAsString(iplService.getAllPlayers(null, null, null));
+	}
+	
+	@GetMapping("/getAllPointsTable")
+	public List<PointsTable> getAllPointsTable() throws JsonProcessingException {
+		List<PointsTable> pointsTable = new ArrayList<>();
+		List<PlayerInfo> players = iplService.getAllPlayers(null, null, null);
+		if (players != null && players.size() > 0) {
+			pointsTable = iplService.getAllParticipants(players);
+		}
+		return pointsTable;
+	}
+	
 }

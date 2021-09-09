@@ -5,9 +5,9 @@
 <head>
 	<meta charset="ISO-8859-1">
 	<title>Rules to play IPL - Masterminds</title>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="/css/bootstrap_4_5_2.css">
+	<script src="/js/jquery_3_5_1.js"></script>
+	<script src="/js/bootstrap_4_5_2.js"></script>
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Ubuntu:regular,bold&subset=Latin">
 	<script type="text/javascript" src="/js/preload_ipl.js"></script>
 </head>
