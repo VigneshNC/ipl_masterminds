@@ -37,7 +37,7 @@ import com.masterminds.service.IplService;
 
 @RestController
 //@CrossOrigin(origins="http://localhost:4200")
-@CrossOrigin(origins="https://ipl-angular.herokuapp.com/")
+@CrossOrigin(origins="https://ipl-masterminds-angular.herokuapp.com/")
 @RequestMapping("ipl")
 public class IplController {
 
