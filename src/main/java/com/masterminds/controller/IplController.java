@@ -43,6 +43,7 @@ import com.masterminds.service.IplService;
 //		"Origin", "X-Requested-With", "Content-Type", "Accept", "content-type", "application/json" }, methods = {
 //				RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS, RequestMethod.PUT, RequestMethod.PATCH,
 //				RequestMethod.DELETE })
+@CrossOrigin
 @RequestMapping("ipl")
 public class IplController {
 
