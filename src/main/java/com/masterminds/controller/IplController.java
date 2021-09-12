@@ -39,10 +39,10 @@ import com.masterminds.service.IplService;
 
 @RestController
 //@CrossOrigin(origins="http://localhost:4200")
-@CrossOrigin(origins = "https://ipl-masterminds-angular.herokuapp.com/", allowCredentials = "true", allowedHeaders = {
-		"Origin", "X-Requested-With", "Content-Type", "Accept", "content-type", "application/json" }, methods = {
-				RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS, RequestMethod.PUT, RequestMethod.PATCH,
-				RequestMethod.DELETE })
+//@CrossOrigin(origins = "https://ipl-masterminds-angular.herokuapp.com/", allowCredentials = "true", allowedHeaders = {
+//		"Origin", "X-Requested-With", "Content-Type", "Accept", "content-type", "application/json" }, methods = {
+//				RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS, RequestMethod.PUT, RequestMethod.PATCH,
+//				RequestMethod.DELETE })
 @RequestMapping("ipl")
 public class IplController {
 
